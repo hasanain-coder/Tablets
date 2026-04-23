@@ -10,291 +10,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #FAF8F3;
-            --fg: #1C1917;
-            --muted: #78716C;
-            --accent: #14532D;
-            --accent-mid: #166534;
-            --accent-light: #22C55E;
-            --gold: #B8860B;
-            --gold-light: #DAA520;
-            --card: #FFFFFF;
-            --border: #E7E5E0;
-            --surface: #F0EDE6;
-            --danger: #991B1B;
-            --danger-light: #FEE2E2;
+            --bg: #FAF8F3; --fg: #1C1917; --muted: #78716C; --accent: #14532D; --accent-mid: #166534; --accent-light: #22C55E;
+            --gold: #B8860B; --gold-light: #DAA520; --card: #FFFFFF; --border: #E7E5E0; --surface: #F0EDE6; --danger: #991B1B;
         }
         body.dark-mode {
-            --bg: #0C0F0A;
-            --fg: #E7E5E0;
-            --muted: #A8A29E;
-            --accent: #22C55E;
-            --accent-mid: #16A34A;
-            --accent-light: #4ADE80;
-            --gold: #DAA520;
-            --gold-light: #F59E0B;
-            --card: #1A1D16;
-            --border: #2E3228;
-            --surface: #14170F;
-            --danger: #F87171;
-            --danger-light: rgba(153,27,27,0.15);
+            --bg: #0C0F0A; --fg: #E7E5E0; --muted: #A8A29E; --accent: #22C55E; --accent-mid: #16A34A; --accent-light: #4ADE80;
+            --gold: #DAA520; --gold-light: #F59E0B; --card: #1A1D16; --border: #2E3228; --surface: #14170F; --danger: #F87171;
         }
         * { font-family: 'DM Sans', 'Cairo', sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
         .font-display { font-family: 'Playfair Display', serif; }
         .font-arabic { font-family: 'Cairo', sans-serif; }
-        body {
-            background: var(--bg);
-            color: var(--fg);
-            transition: background 0.4s ease, color 0.4s ease;
-            min-height: 100vh;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(ellipse at 20% 0%, rgba(20,83,45,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 100%, rgba(184,134,11,0.04) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        body.dark-mode::before {
-            background:
-                radial-gradient(ellipse at 20% 0%, rgba(34,197,94,0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 100%, rgba(218,165,32,0.03) 0%, transparent 50%);
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--surface); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-
+        body { background: var(--bg); color: var(--fg); transition: background 0.4s ease, color 0.4s ease; min-height: 100vh; }
+        body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 0%, rgba(20,83,45,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(184,134,11,0.04) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+        body.dark-mode::before { background: radial-gradient(ellipse at 20% 0%, rgba(34,197,94,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(218,165,32,0.03) 0%, transparent 50%); }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--surface); } ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes slideRight { from { opacity:0; transform:translateX(-16px); } to { opacity:1; transform:translateX(0); } }
         @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.3); } 50% { box-shadow: 0 0 20px 4px rgba(34,197,94,0.15); } }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .anim-fade-up { animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
         .anim-slide-right { animation: slideRight 0.5s cubic-bezier(0.22,1,0.36,1) forwards; }
-
-        input, select, textarea {
-            background: var(--surface);
-            color: var(--fg);
-            border: 1.5px solid var(--border);
-            transition: all 0.25s ease;
-            font-size: 14px;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(20,83,45,0.1);
-            background: var(--card);
-        }
-        body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
-            color: #E7E5E0 !important;
-            caret-color: #E7E5E0;
-        }
-        input:-webkit-autofill, input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0 30px var(--surface) inset !important;
-            -webkit-text-fill-color: var(--fg) !important;
-        }
-        body.dark-mode input:-webkit-autofill {
-            -webkit-text-fill-color: #E7E5E0 !important;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-mid) 100%);
-            color: white;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 3s ease infinite;
-        }
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(20,83,45,0.25);
-        }
+        input, select, textarea { background: var(--surface); color: var(--fg); border: 1.5px solid var(--border); transition: all 0.25s ease; font-size: 14px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20,83,45,0.1); background: var(--card); }
+        body.dark-mode input, body.dark-mode select, body.dark-mode textarea { color: #E7E5E0 !important; caret-color: #E7E5E0; }
+        input:-webkit-autofill, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 30px var(--surface) inset !important; -webkit-text-fill-color: var(--fg) !important; }
+        body.dark-mode input:-webkit-autofill { -webkit-text-fill-color: #E7E5E0 !important; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-mid) 100%); color: white; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); background-size: 200% 100%; animation: shimmer 3s ease infinite; }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(20,83,45,0.25); }
         .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-primary:active:not(:disabled) { transform: translateY(0); }
-
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .btn-gold:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(184,134,11,0.25);
-        }
+        .btn-gold { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: white; transition: all 0.3s ease; }
+        .btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,134,11,0.25); }
         .btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-        }
-        body.dark-mode .card:hover {
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-
-        .live-dot {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: #22C55E;
-            display: inline-block;
-            animation: pulseGlow 2s ease infinite;
-        }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; transition: all 0.3s ease; }
+        .card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+        body.dark-mode .card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; display: inline-block; animation: pulseGlow 2s ease infinite; }
         .live-dot.offline { background: #EF4444; animation: none; }
+        .instruction-preview { background: linear-gradient(135deg, rgba(20,83,45,0.06), rgba(184,134,11,0.04)); border: 1.5px solid rgba(20,83,45,0.15); border-radius: 12px; padding: 16px; direction: rtl; text-align: right; }
+        body.dark-mode .instruction-preview { background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(218,165,32,0.05)); border-color: rgba(34,197,94,0.2); }
 
-        .instruction-preview {
-            background: linear-gradient(135deg, rgba(20,83,45,0.06), rgba(184,134,11,0.04));
-            border: 1.5px solid rgba(20,83,45,0.15);
-            border-radius: 12px;
-            padding: 16px;
-            direction: rtl;
-            text-align: right;
-        }
-        body.dark-mode .instruction-preview {
-            background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(218,165,32,0.05));
-            border-color: rgba(34,197,94,0.2);
-        }
-
-        #pdf-render-container {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            z-index: -1000;
-            opacity: 0;
-            pointer-events: none;
-        }
+        /* ===== PDF STYLES ===== */
+        #pdf-render-container { position: absolute; left: -9999px; top: 0; z-index: -1000; opacity: 0; pointer-events: none; }
         .pdf-page {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 12mm 15mm;
-            background: white;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-            direction: rtl;
-            color: #000;
+            width: 210mm; min-height: 297mm; padding: 10mm 12mm; background: white; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif; direction: rtl; color: #000; display: flex; flex-direction: column;
         }
-        .pdf-title {
-            text-align: center;
-            font-size: 16pt;
-            font-weight: 800;
-            color: #14532D;
-            margin-bottom: 4mm;
-            letter-spacing: 0.5px;
-        }
-        .pdf-subtitle {
-            text-align: center;
-            font-size: 9pt;
-            color: #666;
-            margin-bottom: 8mm;
-            font-weight: 400;
-        }
-        .pdf-info-row {
-            display: flex;
-            gap: 4mm;
-            margin-bottom: 6mm;
-            direction: rtl;
-        }
-        .pdf-info-item {
-            flex: 1;
-            border: 1.5px solid #333;
-            border-radius: 4px;
-            padding: 2.5mm 4mm;
-            font-size: 10pt;
-        }
-        .pdf-info-label {
-            font-weight: 700;
-            color: #14532D;
-            margin-left: 2mm;
-        }
-        .pdf-info-value {
-            font-weight: 600;
-        }
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 10pt;
-        }
-        .pdf-table th {
-            background: #14532D;
-            color: white;
-            padding: 3mm 3mm;
-            font-weight: 700;
-            border: 1.5px solid #0A2E18;
-            text-align: center;
-            font-size: 10pt;
-        }
-        .pdf-table td {
-            border: 1px solid #999;
-            padding: 2.5mm 3mm;
-            text-align: center;
-            vertical-align: middle;
-            font-size: 9.5pt;
-            height: 10mm;
-        }
+        .pdf-page-spacer { flex: 1; }
+        .pdf-title { text-align: center; font-size: 15pt; font-weight: 800; color: #14532D; margin-bottom: 2mm; letter-spacing: 0.3px; }
+        .pdf-subtitle { text-align: center; font-size: 8.5pt; color: #888; margin-bottom: 6mm; font-weight: 400; }
+        .pdf-info-row { display: flex; gap: 3mm; margin-bottom: 5mm; direction: rtl; }
+        .pdf-info-item { flex: 1; border: 1.5px solid #333; border-radius: 3px; padding: 2mm 3mm; font-size: 9.5pt; }
+        .pdf-info-label { font-weight: 700; color: #14532D; margin-left: 1.5mm; }
+        .pdf-info-value { font-weight: 600; }
+        .pdf-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; table-layout: fixed; }
+        .pdf-table th { background: #14532D; color: white; padding: 2.5mm 2mm; font-weight: 700; border: 1.5px solid #0A2E18; text-align: center; font-size: 9pt; }
+        .pdf-table td { border: 1px solid #999; padding: 2.2mm 2mm; text-align: center; vertical-align: middle; font-size: 9pt; height: 10mm; }
         .pdf-table tr:nth-child(even) td { background: #FAFAF7; }
-        .pdf-table .instruction-cell {
-            text-align: right;
-            direction: rtl;
-            font-weight: 600;
-            line-height: 1.7;
-            font-size: 9pt;
-        }
-        .pdf-table .warning-cell {
-            color: #B91C1C;
-            font-weight: 700;
-            font-size: 8.5pt;
-            margin-top: 1mm;
-        }
-        .pdf-footer {
-            margin-top: 10mm;
-            padding-top: 5mm;
-            border-top: 1.5px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            direction: rtl;
-        }
-        .pdf-sig-label {
-            font-size: 11pt;
-            font-weight: 800;
-            color: #14532D;
-        }
-        .pdf-sig-line {
-            border-bottom: 1.5px solid #333;
-            width: 70mm;
-            margin-top: 2mm;
-            height: 12mm;
-        }
+        .pdf-table .pill-col { width: 14%; }
+        .pdf-table .name-col { width: 22%; text-align: right; direction: rtl; }
+        .pdf-table .dose-col { width: 18%; }
+        .pdf-table .instr-col { width: 46%; text-align: right; direction: rtl; font-weight: 600; line-height: 1.65; font-size: 8.5pt; }
+        .pdf-table .instr-bold { font-weight: 800; font-size: 9pt; }
+        .pdf-table .warning-cell { color: #B91C1C; font-weight: 700; font-size: 8pt; margin-top: 0.5mm; }
+        .pdf-footer { margin-top: 4mm; padding-top: 3mm; border-top: 1.5px solid #333; display: flex; justify-content: space-between; align-items: flex-end; direction: rtl; }
+        .pdf-sig-label { font-size: 10.5pt; font-weight: 800; color: #14532D; }
+        .pdf-sig-line { border-bottom: 1.5px solid #333; width: 65mm; margin-top: 1.5mm; height: 14mm; }
 
-        #toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            padding: 12px 28px;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 14px;
-            z-index: 10000;
-            opacity: 0;
-            transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
-            pointer-events: none;
-            font-family: 'Cairo', sans-serif;
-            direction: rtl;
-        }
+        #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); padding: 12px 28px; border-radius: 14px; font-weight: 600; font-size: 14px; z-index: 10000; opacity: 0; transition: all 0.35s cubic-bezier(0.22,1,0.36,1); pointer-events: none; font-family: 'Cairo', sans-serif; direction: rtl; }
         #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
         .patient-card { opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) forwards; }
         .patient-card:nth-child(1) { animation-delay: 0s; }
         .patient-card:nth-child(2) { animation-delay: 0.06s; }
@@ -302,25 +87,13 @@
         .patient-card:nth-child(4) { animation-delay: 0.18s; }
         .patient-card:nth-child(5) { animation-delay: 0.24s; }
         .patient-card:nth-child(6) { animation-delay: 0.3s; }
-
-        @media (max-width: 640px) {
-            .med-grid { grid-template-columns: 1fr !important; }
-        }
+        @media (max-width: 640px) { .med-grid { grid-template-columns: 1fr !important; } }
         @media print { body * { display: none !important; } }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
     </style>
 </head>
 <body>
-    <!-- ===== MAIN APP ===== -->
     <div id="mainApp" style="position:relative; z-index:1;">
-        <!-- Header -->
         <header class="sticky top-0 z-50 border-b border-[var(--border)]" style="background: rgba(250,248,243,0.92); backdrop-filter: blur(16px);">
             <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -349,7 +122,7 @@
         </header>
 
         <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
-            <!-- ===== PATIENT INFO ===== -->
+            <!-- Patient Info -->
             <section class="card overflow-hidden anim-fade-up">
                 <div class="px-6 py-4" style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent-mid) 100%);">
                     <h2 class="text-lg text-white font-bold font-arabic">بيانات المريض</h2>
@@ -357,127 +130,45 @@
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">اسم المريض</label>
-                            <input type="text" id="inpName" class="w-full px-4 py-3 rounded-xl" placeholder="أدخل اسم المريض">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">رقم الغرفة</label>
-                            <input type="text" id="inpRoom" class="w-full px-4 py-3 rounded-xl" placeholder="مثال: 204">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">رقم السرير</label>
-                            <input type="text" id="inpBed" class="w-full px-4 py-3 rounded-xl" placeholder="مثال: 3">
-                        </div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">اسم المريض</label><input type="text" id="inpName" class="w-full px-4 py-3 rounded-xl" placeholder="أدخل اسم المريض"></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">رقم الغرفة</label><input type="text" id="inpRoom" class="w-full px-4 py-3 rounded-xl" placeholder="مثال: 204"></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">رقم السرير</label><input type="text" id="inpBed" class="w-full px-4 py-3 rounded-xl" placeholder="مثال: 3"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- ===== MEDICATION ENTRY ===== -->
+            <!-- Medication Entry -->
             <section class="card overflow-hidden anim-fade-up" style="animation-delay: 0.1s;">
                 <div class="px-6 py-4 flex items-center gap-3" style="background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                    <div>
-                        <h2 class="text-lg text-white font-bold font-arabic">إضافة دواء</h2>
-                        <p class="text-white/60 text-xs">Add Medication Entry</p>
-                    </div>
+                    <div><h2 class="text-lg text-white font-bold font-arabic">إضافة دواء</h2><p class="text-white/60 text-xs">Add Medication Entry</p></div>
                 </div>
                 <div class="p-6 space-y-5">
-                    <!-- Row 1 -->
                     <div class="med-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التصنيف</label>
-                            <select id="selCategory" class="w-full px-4 py-3 rounded-xl">
-                                <option value="">-- اختر التصنيف --</option>
-                                <option value="cardiac">قلبية (Cardiac)</option>
-                                <option value="antibiotics">مضادات حيوية (Antibiotics)</option>
-                                <option value="others">أخرى (Others)</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">اسم الدواء</label>
-                            <select id="selDrug" class="w-full px-4 py-3 rounded-xl" disabled>
-                                <option value="">-- اختر التصنيف أولاً --</option>
-                            </select>
-                            <input type="text" id="inpCustomDrug" class="hidden w-full px-4 py-3 rounded-xl" placeholder="اسم الدواء (يدوي)">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">الجرعة</label>
-                            <input type="text" id="inpDose" class="w-full px-4 py-3 rounded-xl" placeholder="مثال: 75mg">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">عدد الحبات / الجرعة</label>
-                            <select id="selPills" class="w-full px-4 py-3 rounded-xl">
-                                <option value="1">1 حبة</option>
-                                <option value="2">2 حبات</option>
-                                <option value="3">3 حبات</option>
-                                <option value="4">4 حبات</option>
-                                <option value="5">5 حبات</option>
-                            </select>
-                        </div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التصنيف</label><select id="selCategory" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر التصنيف --</option><option value="cardiac">قلبية (Cardiac)</option><option value="antibiotics">مضادات حيوية (Antibiotics)</option><option value="others">أخرى (Others)</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">اسم الدواء</label><select id="selDrug" class="w-full px-4 py-3 rounded-xl" disabled><option value="">-- اختر التصنيف أولاً --</option></select><input type="text" id="inpCustomDrug" class="hidden w-full px-4 py-3 rounded-xl" placeholder="اسم الدواء (يدوي)"></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">الجرعة</label><input type="text" id="inpDose" class="w-full px-4 py-3 rounded-xl" placeholder="مثال: 75mg"></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">عدد الحبات / الجرعة</label><select id="selPills" class="w-full px-4 py-3 rounded-xl"><option value="1">1 حبة</option><option value="2">2 حبات</option><option value="3">3 حبات</option><option value="4">4 حبات</option><option value="5">5 حبات</option></select></div>
                     </div>
-                    <!-- Row 2 -->
                     <div class="med-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التكرار</label>
-                            <select id="selFreq" class="w-full px-4 py-3 rounded-xl">
-                                <option value="1">مرة واحدة يومياً</option>
-                                <option value="2">مرتين يومياً</option>
-                                <option value="3">ثلاث مرات يومياً</option>
-                                <option value="4">أربع مرات يومياً</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label>
-                            <select id="selTiming" class="w-full px-4 py-3 rounded-xl">
-                                <option value="">-- اختر الوقت --</option>
-                                <option value="١٢ ليلاً">١٢ ليلاً</option>
-                                <option value="١٢ ظهراً">١٢ ظهراً</option>
-                                <option value="٨ صباحاً">٨ صباحاً</option>
-                                <option value="٨ صباحاً و٤ عصراً">٨ صباحاً و٤ عصراً</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">طريقة الإعطاء</label>
-                            <select id="selMethod" class="w-full px-4 py-3 rounded-xl">
-                                <option value="after">بعد الطعام</option>
-                                <option value="before">قبل الطعام</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-[var(--fg)] font-arabic">ملاحظات تحذيرية</label>
-                            <select id="selWarning" class="w-full px-4 py-3 rounded-xl">
-                                <option value="">بدون</option>
-                                <option value="milk">لا تؤخذ مع الحليب</option>
-                                <option value="drowsy">تسبب النعاس</option>
-                                <option value="water">اشرب كميات كافية من الماء</option>
-                                <option value="crush">لا تسحق القرص</option>
-                            </select>
-                        </div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التكرار</label><select id="selFreq" class="w-full px-4 py-3 rounded-xl"><option value="1">مرة واحدة يومياً</option><option value="2">مرتين يومياً</option><option value="3">ثلاث مرات يومياً</option><option value="4">أربع مرات يومياً</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="١٢ ليلاً">١٢ ليلاً</option><option value="١٢ ظهراً">١٢ ظهراً</option><option value="٨ صباحاً">٨ صباحاً</option><option value="٨ صباحاً و٤ عصراً">٨ صباحاً و٤ عصراً</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">طريقة الإعطاء</label><select id="selMethod" class="w-full px-4 py-3 rounded-xl"><option value="after">بعد الطعام</option><option value="before">قبل الطعام</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">ملاحظات تحذيرية</label><select id="selWarning" class="w-full px-4 py-3 rounded-xl"><option value="">بدون</option><option value="milk">لا تؤخذ مع الحليب</option><option value="drowsy">تسبب النعاس</option><option value="water">اشرب كميات كافية من الماء</option><option value="crush">لا تسحق القرص</option></select></div>
                     </div>
-
-                    <!-- Live Arabic Instruction Preview -->
                     <div id="previewBox" class="instruction-preview hidden">
                         <div class="flex items-start gap-2">
                             <svg class="w-5 h-5 mt-0.5 flex-shrink-0" style="color: var(--accent);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <div>
-                                <p class="text-xs font-bold mb-1" style="color: var(--accent);">معاينة التعليمات:</p>
-                                <p id="previewText" class="font-arabic font-bold text-base leading-relaxed" style="color: var(--fg);">—</p>
-                                <p id="previewTiming" class="hidden font-arabic text-sm font-semibold mt-1" style="color: var(--gold);"></p>
-                                <p id="previewWarning" class="hidden font-arabic text-sm font-bold mt-1" style="color: var(--danger);"></p>
-                            </div>
+                            <div><p class="text-xs font-bold mb-1" style="color: var(--accent);">معاينة التعليمات:</p><p id="previewText" class="font-arabic font-bold text-base leading-relaxed" style="color: var(--fg);">—</p><p id="previewTiming" class="hidden font-arabic text-sm font-semibold mt-1" style="color: var(--gold);"></p><p id="previewWarning" class="hidden font-arabic text-sm font-bold mt-1" style="color: var(--danger);"></p></div>
                         </div>
                     </div>
-
-                    <!-- Add Button -->
                     <button id="btnAddMed" class="btn-primary w-full py-3.5 rounded-xl font-bold text-base flex items-center justify-center gap-2 font-arabic" disabled>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                        إضافة الدواء للقائمة
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>إضافة الدواء للقائمة
                     </button>
                 </div>
             </section>
 
-            <!-- ===== CURRENT MEDICATIONS LIST ===== -->
+            <!-- Current Meds List -->
             <section id="currentMedsSection" class="card overflow-hidden hidden anim-fade-up" style="animation-delay: 0.15s;">
                 <div class="px-6 py-3 flex items-center justify-between" style="background: var(--surface); border-bottom: 1px solid var(--border);">
                     <h3 class="font-bold text-[var(--fg)] font-arabic text-sm">الأدوية المضافة (<span id="medCount">0</span>)</h3>
@@ -486,42 +177,27 @@
                 <div id="medsList" class="p-4 space-y-2 max-h-[300px] overflow-y-auto"></div>
                 <div class="p-4 pt-0">
                     <button id="btnSave" class="btn-gold w-full py-4 rounded-xl font-bold text-lg font-arabic flex items-center justify-center gap-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                        حفظ المريض في الطابور
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>حفظ المريض في الطابور
                     </button>
                 </div>
             </section>
 
-            <!-- ===== PATIENT QUEUE ===== -->
+            <!-- Patient Queue -->
             <section class="space-y-4 anim-fade-up" style="animation-delay: 0.2s;">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <h2 class="text-xl font-bold text-[var(--fg)] font-display">Patient Queue</h2>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <div class="relative">
-                            <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            <input type="text" id="filterRoom" class="pr-9 pl-4 py-2 rounded-xl text-sm w-40" placeholder="فلتر بالغرفة..." dir="ltr" style="text-align: left;">
-                        </div>
-                        <label class="flex items-center gap-1.5 cursor-pointer text-sm font-medium text-[var(--fg)]">
-                            <input type="checkbox" id="selAll" class="w-4 h-4 rounded accent-[var(--accent)]">
-                            تحديد الكل
-                        </label>
+                        <div class="relative"><svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="filterRoom" class="pr-9 pl-4 py-2 rounded-xl text-sm w-40" placeholder="فلتر بالغرفة..." dir="ltr" style="text-align: left;"></div>
+                        <label class="flex items-center gap-1.5 cursor-pointer text-sm font-medium text-[var(--fg)]"><input type="checkbox" id="selAll" class="w-4 h-4 rounded accent-[var(--accent)]">تحديد الكل</label>
                     </div>
                 </div>
                 <div class="flex gap-2 flex-wrap">
-                    <button id="btnPDF" disabled class="btn-primary px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 font-arabic">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        طباعة المحدد (PDF)
-                    </button>
-                    <button id="btnClearQueue" class="px-5 py-2.5 rounded-xl border text-sm font-medium flex items-center gap-2 transition-colors hover:bg-red-50" style="border-color: rgba(153,27,27,0.2); color: var(--danger);">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        مسح الطابور
-                    </button>
+                    <button id="btnPDF" disabled class="btn-primary px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 font-arabic"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>طباعة المحدد (PDF)</button>
+                    <button id="btnClearQueue" class="px-5 py-2.5 rounded-xl border text-sm font-medium flex items-center gap-2 transition-colors hover:bg-red-50" style="border-color: rgba(153,27,27,0.2); color: var(--danger);"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>مسح الطابور</button>
                 </div>
                 <div id="queueGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
                 <div id="emptyState" class="text-center py-16 card">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background: var(--surface);">
-                        <svg class="w-10 h-10 text-[var(--muted)]" style="opacity: 0.3;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </div>
+                    <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background: var(--surface);"><svg class="w-10 h-10 text-[var(--muted)]" style="opacity: 0.3;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
                     <p class="text-[var(--muted)] font-semibold font-arabic">لا يوجد مرضى في الطابور</p>
                     <p class="text-[var(--muted)] text-sm mt-1 opacity-60 font-arabic">أضف بيانات المريض أعلاه للبدء</p>
                 </div>
@@ -529,609 +205,277 @@
         </main>
     </div>
 
-    <!-- PDF Render Container -->
     <div id="pdf-render-container"></div>
-
-    <!-- Toast -->
     <div id="toast"><span id="toastMsg"></span></div>
 
-    <!-- ===== FIREBASE + APP LOGIC ===== -->
     <script type="module">
-        const firebaseConfig = {
-            apiKey: "AIzaSyAaMqxvBAuTkOykYHF5w_xjS98bDOhZoPY",
-            authDomain: "documentation2-dd1aa.firebaseapp.com",
-            projectId: "documentation2-dd1aa",
-            storageBucket: "documentation2-dd1aa.firebasestorage.app",
-            messagingSenderId: "236681783643",
-            appId: "1:236681783643:web:dc4d715258955b3413d27e",
-            measurementId: "G-WRK2C3121X"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyAaMqxvBAuTkOykYHF5w_xjS98bDOhZoPY", authDomain: "documentation2-dd1aa.firebaseapp.com", projectId: "documentation2-dd1aa", storageBucket: "documentation2-dd1aa.firebasestorage.app", messagingSenderId: "236681783643", appId: "1:236681783643:web:dc4d715258955b3413d27e", measurementId: "G-WRK2C3121X" };
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import {
-            getFirestore, collection, addDoc, deleteDoc, doc,
-            onSnapshot, query, orderBy
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const patientsRef = collection(db, "counseling_patients");
 
-        // =============================================
-        // DRUG DATABASE
-        // =============================================
         const DRUG_DB = {
-            cardiac: [
-                { name: 'Aspirin', defaultDose: '75mg' },
-                { name: 'Plavix (Clopidogrel)', defaultDose: '75mg' },
-                { name: 'Atorvastatin', defaultDose: '20mg' },
-                { name: 'Bisoprolol', defaultDose: '5mg' }
-            ],
-            antibiotics: [
-                { name: 'Amoxicillin', defaultDose: '500mg' },
-                { name: 'Augmentin', defaultDose: '625mg' },
-                { name: 'Azithromycin', defaultDose: '500mg' }
-            ],
+            cardiac: [{ name: 'Aspirin', defaultDose: '75mg' }, { name: 'Plavix (Clopidogrel)', defaultDose: '75mg' }, { name: 'Atorvastatin', defaultDose: '20mg' }, { name: 'Bisoprolol', defaultDose: '5mg' }],
+            antibiotics: [{ name: 'Amoxicillin', defaultDose: '500mg' }, { name: 'Augmentin', defaultDose: '625mg' }, { name: 'Azithromycin', defaultDose: '500mg' }],
             others: []
         };
+        const PILLS_ARABIC = { 1: 'حبة واحدة', 2: 'حبتين', 3: 'ثلاث حبات', 4: 'أربع حبات', 5: 'خمس حبات' };
+        const FREQ_ARABIC = { 1: 'مرة واحدة', 2: 'مرتين', 3: 'ثلاث مرات', 4: 'أربع مرات' };
+        const METHOD_ARABIC = { before: 'قبل الطعام', after: 'بعد الطعام' };
+        const WARNING_ARABIC = { milk: 'لا تؤخذ مع الحليب', drowsy: 'تسبب النعاس', water: 'اشرب كميات كافية من الماء', crush: 'لا تسحق القرص' };
 
-        // أرقام عربية -> كلمات
-        const PILLS_ARABIC = {
-            1: 'حبة واحدة',
-            2: 'حبتين',
-            3: 'ثلاث حبات',
-            4: 'أربع حبات',
-            5: 'خمس حبات'
-        };
-
-        const FREQ_ARABIC = {
-            1: 'مرة واحدة',
-            2: 'مرتين',
-            3: 'ثلاث مرات',
-            4: 'أربع مرات'
-        };
-
-        const METHOD_ARABIC = {
-            before: 'قبل الطعام',
-            after: 'بعد الطعام'
-        };
-
-        const WARNING_ARABIC = {
-            milk: 'لا تؤخذ مع الحليب',
-            drowsy: 'تسبب النعاس',
-            water: 'اشرب كميات كافية من الماء',
-            crush: 'لا تسحق القرص'
-        };
-
-        // =============================================
-        // STATE
-        // =============================================
-        let patients = [];
-        let currentMeds = [];
-        let selectedIds = new Set();
+        let patients = [], currentMeds = [], selectedIds = new Set();
         const $ = id => document.getElementById(id);
 
-        // =============================================
-        // HELPERS
-        // =============================================
         function generateArabicInstruction(pills, method, freq) {
             const p = PILLS_ARABIC[pills] || `${pills} حبات`;
             const m = METHOD_ARABIC[method] || '';
             const f = FREQ_ARABIC[freq] || `${freq} مرات`;
             return `تؤخذ ${p} ${m} ${f} يومياً`;
         }
-
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2, 8);
-        }
-
+        function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 8); }
         function showToast(msg, type = 'success') {
-            const colors = {
-                success: 'background: #14532D; color: white;',
-                error: 'background: #991B1B; color: white;',
-                info: 'background: #1C1917; color: white;'
-            };
-            const toast = $('toast');
-            $('toastMsg').textContent = msg;
-            toast.style.cssText += colors[type] || colors.info;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            const c = { success: 'background:#14532D;color:white;', error: 'background:#991B1B;color:white;', info: 'background:#1C1917;color:white;' };
+            const t = $('toast'); $('toastMsg').textContent = msg; t.style.cssText += c[type] || c.info; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
+        function setConnection(online) { $('connDot').classList.toggle('offline', !online); $('connText').textContent = online ? 'متصل' : 'غير متصل'; }
 
-        function setConnection(online) {
-            $('connDot').classList.toggle('offline', !online);
-            $('connText').textContent = online ? 'متصل' : 'غير متصل';
-        }
-
-        // =============================================
-        // DARK MODE
-        // =============================================
         function initDarkMode() {
-            const isDark = localStorage.getItem('counseling_theme') === 'dark';
-            document.body.classList.toggle('dark-mode', isDark);
-            $('iconMoon').classList.toggle('hidden', isDark);
-            $('iconSun').classList.toggle('hidden', !isDark);
+            const d = localStorage.getItem('counseling_theme') === 'dark';
+            document.body.classList.toggle('dark-mode', d); $('iconMoon').classList.toggle('hidden', d); $('iconSun').classList.toggle('hidden', !d);
         }
         $('darkToggle').addEventListener('click', () => {
-            const isDark = document.body.classList.toggle('dark-mode');
-            localStorage.setItem('counseling_theme', isDark ? 'dark' : 'light');
-            $('iconMoon').classList.toggle('hidden', isDark);
-            $('iconSun').classList.toggle('hidden', !isDark);
+            const d = document.body.classList.toggle('dark-mode'); localStorage.setItem('counseling_theme', d ? 'dark' : 'light');
+            $('iconMoon').classList.toggle('hidden', d); $('iconSun').classList.toggle('hidden', !d);
         });
 
-        // =============================================
-        // DRUG DROPDOWN LOGIC
-        // =============================================
         function updateDrugDropdown() {
-            const cat = $('selCategory').value;
-            const sel = $('selDrug');
-            const custom = $('inpCustomDrug');
-
-            sel.innerHTML = '';
-            custom.classList.add('hidden');
-            sel.disabled = true;
-
-            if (!cat) {
-                sel.innerHTML = '<option value="">-- اختر التصنيف أولاً --</option>';
-                return;
-            }
-
+            const cat = $('selCategory').value, sel = $('selDrug'), custom = $('inpCustomDrug');
+            sel.innerHTML = ''; custom.classList.add('hidden'); sel.disabled = true;
+            if (!cat) { sel.innerHTML = '<option value="">-- اختر التصنيف أولاً --</option>'; return; }
             sel.disabled = false;
-
-            if (cat === 'others') {
-                custom.classList.remove('hidden');
-                sel.innerHTML = '<option value="custom">إدخال يدوي</option>';
-                return;
-            }
-
+            if (cat === 'others') { custom.classList.remove('hidden'); sel.innerHTML = '<option value="custom">إدخال يدوي</option>'; return; }
             const drugs = DRUG_DB[cat] || [];
-            sel.innerHTML = '<option value="">-- اختر الدواء --</option>' +
-                drugs.map(d => `<option value="${d.name}" data-dose="${d.defaultDose}">${d.name}</option>`).join('');
+            sel.innerHTML = '<option value="">-- اختر الدواء --</option>' + drugs.map(d => `<option value="${d.name}" data-dose="${d.defaultDose}">${d.name}</option>`).join('');
         }
-
         function onDrugSelected() {
-            const val = $('selDrug').value;
-            if (val && val !== 'custom') {
-                const opt = $('selDrug').selectedOptions[0];
-                $('inpDose').value = opt.dataset.dose || '';
-            } else if (val !== 'custom') {
-                $('inpDose').value = '';
-            }
+            const v = $('selDrug').value;
+            if (v && v !== 'custom') $('inpDose').value = $('selDrug').selectedOptions[0].dataset.dose || '';
+            else if (v !== 'custom') $('inpDose').value = '';
             updatePreview();
         }
-
         function updatePreview() {
-            const pills = parseInt($('selPills').value) || 1;
-            const method = $('selMethod').value;
-            const freq = parseInt($('selFreq').value) || 1;
-            const warning = $('selWarning').value;
-            const timing = $('selTiming').value;
-
-            const instruction = generateArabicInstruction(pills, method, freq);
-            $('previewText').textContent = instruction;
+            const pills = parseInt($('selPills').value) || 1, method = $('selMethod').value, freq = parseInt($('selFreq').value) || 1, warning = $('selWarning').value, timing = $('selTiming').value;
+            $('previewText').textContent = generateArabicInstruction(pills, method, freq);
             $('previewBox').classList.remove('hidden');
-
-            // عرض وقت الإعطاء في المعاينة
-            if (timing) {
-                $('previewTiming').textContent = 'الوقت: ' + timing;
-                $('previewTiming').classList.remove('hidden');
-            } else {
-                $('previewTiming').classList.add('hidden');
-            }
-
-            if (warning && WARNING_ARABIC[warning]) {
-                $('previewWarning').textContent = 'تنبيه: ' + WARNING_ARABIC[warning];
-                $('previewWarning').classList.remove('hidden');
-            } else {
-                $('previewWarning').classList.add('hidden');
-            }
-
-            // تفعيل/تعطيل زر الإضافة
-            const cat = $('selCategory').value;
-            const drugVal = $('selDrug').value;
-            const customName = cat === 'others' ? $('inpCustomDrug').value.trim() : '';
-            const hasDrug = (drugVal && drugVal !== 'custom') || (drugVal === 'custom' && customName);
-            const hasDose = $('inpDose').value.trim();
-            $('btnAddMed').disabled = !(cat && hasDrug && hasDose);
+            if (timing) { $('previewTiming').textContent = 'الوقت: ' + timing; $('previewTiming').classList.remove('hidden'); } else $('previewTiming').classList.add('hidden');
+            if (warning && WARNING_ARABIC[warning]) { $('previewWarning').textContent = 'تنبيه: ' + WARNING_ARABIC[warning]; $('previewWarning').classList.remove('hidden'); } else $('previewWarning').classList.add('hidden');
+            const cat = $('selCategory').value, dv = $('selDrug').value, cn = cat === 'others' ? $('inpCustomDrug').value.trim() : '';
+            $('btnAddMed').disabled = !(cat && ((dv && dv !== 'custom') || (dv === 'custom' && cn)) && $('inpDose').value.trim());
         }
 
-        // =============================================
-        // ADD / REMOVE MEDICATION
-        // =============================================
         function addMedication() {
-            const cat = $('selCategory').value;
-            const drugVal = $('selDrug').value;
-            let drugName = '';
-            let dose = $('inpDose').value.trim();
-            const pills = parseInt($('selPills').value) || 1;
-            const freq = parseInt($('selFreq').value) || 1;
-            const timing = $('selTiming').value;
-            const method = $('selMethod').value;
-            const warning = $('selWarning').value;
-
-            if (drugVal === 'custom') {
-                drugName = $('inpCustomDrug').value.trim();
-            } else {
-                drugName = drugVal;
-            }
-
-            if (!drugName || !dose) {
-                showToast('أكمل بيانات الدواء', 'error');
-                return;
-            }
-
-            if (currentMeds.some(m => m.drugName.toLowerCase() === drugName.toLowerCase())) {
-                showToast('هذا الدواء مضاف مسبقاً', 'error');
-                return;
-            }
-
-            const instruction = generateArabicInstruction(pills, method, freq);
-            const warningText = warning ? WARNING_ARABIC[warning] : '';
-
-            currentMeds.push({
-                id: generateId(),
-                category: cat,
-                drugName,
-                dose,
-                pills,
-                freq,
-                timing,
-                method,
-                warning,
-                instruction,
-                warningText
-            });
-
-            renderMedsList();
-            showToast('تمت إضافة الدواء');
-
-            // إعادة تعيين حقول الدواء فقط (نحافظ على التصنيف)
-            $('selDrug').value = cat === 'others' ? 'custom' : '';
-            $('inpDose').value = '';
-            if (cat === 'others') $('inpCustomDrug').value = '';
-            $('selTiming').value = '';
-            $('selWarning').value = '';
-            $('previewBox').classList.add('hidden');
-            $('btnAddMed').disabled = true;
+            const cat = $('selCategory').value, dv = $('selDrug').value;
+            let drugName = dv === 'custom' ? $('inpCustomDrug').value.trim() : dv;
+            const dose = $('inpDose').value.trim(), pills = parseInt($('selPills').value) || 1, freq = parseInt($('selFreq').value) || 1;
+            const timing = $('selTiming').value, method = $('selMethod').value, warning = $('selWarning').value;
+            if (!drugName || !dose) { showToast('أكمل بيانات الدواء', 'error'); return; }
+            if (currentMeds.some(m => m.drugName.toLowerCase() === drugName.toLowerCase())) { showToast('هذا الدواء مضاف مسبقاً', 'error'); return; }
+            currentMeds.push({ id: generateId(), category: cat, drugName, dose, pills, freq, timing, method, warning, instruction: generateArabicInstruction(pills, method, freq), warningText: warning ? WARNING_ARABIC[warning] : '' });
+            renderMedsList(); showToast('تمت إضافة الدواء');
+            $('selDrug').value = cat === 'others' ? 'custom' : ''; $('inpDose').value = '';
+            if (cat === 'others') $('inpCustomDrug').value = ''; $('selTiming').value = ''; $('selWarning').value = '';
+            $('previewBox').classList.add('hidden'); $('btnAddMed').disabled = true;
         }
-
-        function removeMed(index) {
-            currentMeds.splice(index, 1);
-            renderMedsList();
-        }
+        function removeMed(i) { currentMeds.splice(i, 1); renderMedsList(); }
+        window._removeMed = removeMed;
 
         function renderMedsList() {
-            const section = $('currentMedsSection');
-            const list = $('medsList');
-
-            if (currentMeds.length === 0) {
-                section.classList.add('hidden');
-                return;
-            }
-
-            section.classList.remove('hidden');
-            $('medCount').textContent = currentMeds.length;
-
-            list.innerHTML = currentMeds.map((m, i) => `
-                <div class="anim-slide-right flex items-start justify-between gap-3 p-3 rounded-xl" style="background: var(--surface); border: 1px solid var(--border); animation-delay: ${i * 0.05}s;">
+            const s = $('currentMedsSection'), l = $('medsList');
+            if (!currentMeds.length) { s.classList.add('hidden'); return; }
+            s.classList.remove('hidden'); $('medCount').textContent = currentMeds.length;
+            l.innerHTML = currentMeds.map((m, i) => `
+                <div class="anim-slide-right flex items-start justify-between gap-3 p-3 rounded-xl" style="background:var(--surface);border:1px solid var(--border);animation-delay:${i*0.05}s;">
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="font-bold text-[var(--fg)] text-sm">${m.drugName}</span>
-                            <span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background: rgba(20,83,45,0.08); color: var(--accent);">${m.dose}</span>
-                            ${m.timing ? `<span class="text-xs font-semibold" style="color: var(--gold);">${m.timing}</span>` : ''}
+                            <span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background:rgba(20,83,45,0.08);color:var(--accent);">${m.dose} X ${m.freq}</span>
+                            ${m.timing ? `<span class="text-xs font-semibold" style="color:var(--gold);">${m.timing}</span>` : ''}
                         </div>
-                        <p class="font-arabic text-sm font-bold mt-1" style="color: var(--fg);">${m.instruction}</p>
-                        ${m.warningText ? `<p class="font-arabic text-xs font-bold mt-0.5" style="color: var(--danger);">${m.warningText}</p>` : ''}
+                        <p class="font-arabic text-sm font-bold mt-1" style="color:var(--fg);">${m.instruction}</p>
+                        ${m.warningText ? `<p class="font-arabic text-xs font-bold mt-0.5" style="color:var(--danger);">${m.warningText}</p>` : ''}
                     </div>
-                    <button onclick="window._removeMed(${i})" class="p-1.5 rounded-lg hover:bg-red-50 transition-colors flex-shrink-0 mt-0.5" style="color: var(--danger);">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>
-            `).join('');
+                    <button onclick="window._removeMed(${i})" class="p-1.5 rounded-lg hover:bg-red-50 transition-colors flex-shrink-0 mt-0.5" style="color:var(--danger);"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                </div>`).join('');
         }
-        window._removeMed = removeMed;
 
-        // =============================================
-        // SAVE PATIENT TO FIRESTORE
-        // =============================================
         async function savePatient() {
-            const name = $('inpName').value.trim();
-            const room = $('inpRoom').value.trim();
-            const bed = $('inpBed').value.trim();
-
-            if (!name || !room || !bed) {
-                showToast('أكمل بيانات المريض (الاسم، الغرفة، السرير)', 'error');
-                return;
-            }
-            if (currentMeds.length === 0) {
-                showToast('أضف دواء واحد على الأقل', 'error');
-                return;
-            }
-
-            const patient = {
-                name,
-                room,
-                bed,
-                meds: [...currentMeds],
-                saveDate: new Date().toISOString()
-            };
-
+            const name = $('inpName').value.trim(), room = $('inpRoom').value.trim(), bed = $('inpBed').value.trim();
+            if (!name || !room || !bed) { showToast('أكمل بيانات المريض', 'error'); return; }
+            if (!currentMeds.length) { showToast('أضف دواء واحد على الأقل', 'error'); return; }
             showToast('جاري الحفظ...', 'info');
-
             try {
-                await addDoc(patientsRef, patient);
-                $('inpName').value = '';
-                $('inpRoom').value = '';
-                $('inpBed').value = '';
-                $('selCategory').value = '';
-                updateDrugDropdown();
-                $('inpDose').value = '';
-                $('selTiming').value = '';
-                $('selWarning').value = '';
-                $('previewBox').classList.add('hidden');
-                $('btnAddMed').disabled = true;
-                currentMeds = [];
-                renderMedsList();
+                await addDoc(patientsRef, { name, room, bed, meds: [...currentMeds], saveDate: new Date().toISOString() });
+                $('inpName').value = ''; $('inpRoom').value = ''; $('inpBed').value = ''; $('selCategory').value = '';
+                updateDrugDropdown(); $('inpDose').value = ''; $('selTiming').value = ''; $('selWarning').value = '';
+                $('previewBox').classList.add('hidden'); $('btnAddMed').disabled = true; currentMeds = []; renderMedsList();
                 showToast('تم حفظ المريض بنجاح');
-            } catch (err) {
-                console.error('Save error:', err);
-                showToast('فشل الحفظ: ' + err.message, 'error');
-            }
+            } catch (e) { console.error(e); showToast('فشل الحفظ: ' + e.message, 'error'); }
         }
 
-        // =============================================
-        // FIRESTORE REAL-TIME LISTENER
-        // =============================================
         function startListener() {
-            onSnapshot(
-                query(patientsRef, orderBy("saveDate", "desc")),
-                (snapshot) => {
-                    setConnection(true);
-                    patients = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-                    renderQueue();
-                },
-                (err) => {
-                    console.error('Listener error:', err);
-                    setConnection(false);
-                    showToast('فقد الاتصال بقاعدة البيانات', 'error');
-                }
+            onSnapshot(query(patientsRef, orderBy("saveDate", "desc")),
+                (s) => { setConnection(true); patients = s.docs.map(d => ({ id: d.id, ...d.data() })); renderQueue(); },
+                (e) => { console.error(e); setConnection(false); showToast('فقد الاتصال بقاعدة البيانات', 'error'); }
             );
         }
-
         async function deletePatient(id) {
-            const backup = patients.find(p => p.id === id);
-            patients = patients.filter(p => p.id !== id);
-            selectedIds.delete(id);
-            renderQueue();
-            try {
-                await deleteDoc(doc(db, "counseling_patients", id));
-            } catch (err) {
-                console.error('Delete error:', err);
-                patients.unshift(backup);
-                renderQueue();
-                showToast('فشل الحذف', 'error');
-            }
+            const b = patients.find(p => p.id === id); patients = patients.filter(p => p.id !== id); selectedIds.delete(id); renderQueue();
+            try { await deleteDoc(doc(db, "counseling_patients", id)); } catch (e) { patients.unshift(b); renderQueue(); showToast('فشل الحذف', 'error'); }
         }
 
-        // =============================================
-        // RENDER QUEUE
-        // =============================================
         function renderQueue() {
-            const filter = $('filterRoom').value.trim().toLowerCase();
-            const filtered = filter
-                ? patients.filter(p => p.room.toLowerCase().includes(filter))
-                : patients;
-
-            const grid = $('queueGrid');
-            const empty = $('emptyState');
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
-            } else {
+            const f = $('filterRoom').value.trim().toLowerCase();
+            const filtered = f ? patients.filter(p => p.room.toLowerCase().includes(f)) : patients;
+            const grid = $('queueGrid'), empty = $('emptyState');
+            if (!filtered.length) { grid.innerHTML = ''; empty.classList.remove('hidden'); }
+            else {
                 empty.classList.add('hidden');
                 grid.innerHTML = filtered.map(p => {
-                    const isSelected = selectedIds.has(p.id);
-                    const dateStr = new Date(p.saveDate).toLocaleDateString('ar-IQ', {
-                        year: 'numeric', month: 'short', day: 'numeric'
-                    });
-                    return `
-                    <div class="patient-card card overflow-hidden">
-                        <div class="p-4 flex items-center justify-between" style="background: var(--surface); border-bottom: 1px solid var(--border);">
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" ${isSelected ? 'checked' : ''}
-                                    onchange="window._toggleSelect('${p.id}')"
-                                    class="w-4 h-4 rounded accent-[var(--accent)]">
-                                <div>
-                                    <h3 class="font-bold text-[var(--fg)] font-arabic text-sm">${p.name}</h3>
-                                    <p class="text-xs text-[var(--muted)]">غرفة ${p.room} • سرير ${p.bed} • ${dateStr}</p>
-                                </div>
-                            </div>
+                    const sel = selectedIds.has(p.id);
+                    const ds = new Date(p.saveDate).toLocaleDateString('ar-IQ', { year: 'numeric', month: 'short', day: 'numeric' });
+                    return `<div class="patient-card card overflow-hidden">
+                        <div class="p-4 flex items-center justify-between" style="background:var(--surface);border-bottom:1px solid var(--border);">
+                            <div class="flex items-center gap-3"><input type="checkbox" ${sel?'checked':''} onchange="window._toggleSelect('${p.id}')" class="w-4 h-4 rounded accent-[var(--accent)]">
+                            <div><h3 class="font-bold text-[var(--fg)] font-arabic text-sm">${p.name}</h3><p class="text-xs text-[var(--muted)]">غرفة ${p.room} • سرير ${p.bed} • ${ds}</p></div></div>
                             <div class="flex gap-1">
-                                <button onclick="window._printSingle('${p.id}')" class="p-2 rounded-lg hover:bg-[var(--accent)]/10 transition-colors" style="color: var(--accent);" title="طباعة">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                                </button>
-                                <button onclick="window._deletePatient('${p.id}')" class="p-2 rounded-lg hover:bg-red-50 transition-colors" style="color: var(--danger);" title="حذف">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            ${p.meds.map(m => `
-                                <div class="flex items-start justify-between gap-2 text-xs border-b border-dashed last:border-0 pb-2" style="border-color: var(--border);">
-                                    <div class="min-w-0">
-                                        <span class="font-bold text-[var(--fg)]">${m.drugName}</span>
-                                        <span class="font-semibold" style="color: var(--accent);"> ${m.dose}</span>
-                                        ${m.timing ? `<span class="font-semibold" style="color: var(--gold);"> • ${m.timing}</span>` : ''}
-                                    </div>
-                                    <div class="text-left flex-shrink-0 font-arabic text-[10px] leading-relaxed" style="color: var(--muted); max-width: 140px;">${m.instruction}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>`;
+                                <button onclick="window._printSingle('${p.id}')" class="p-2 rounded-lg hover:bg-[var(--accent)]/10 transition-colors" style="color:var(--accent);" title="طباعة"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></button>
+                                <button onclick="window._deletePatient('${p.id}')" class="p-2 rounded-lg hover:bg-red-50 transition-colors" style="color:var(--danger);" title="حذف"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div></div>
+                        <div class="p-4 space-y-2">${p.meds.map(m => `<div class="flex items-start justify-between gap-2 text-xs border-b border-dashed last:border-0 pb-2" style="border-color:var(--border);"><div class="min-w-0"><span class="font-bold text-[var(--fg)]">${m.drugName}</span><span class="font-semibold" style="color:var(--accent);"> ${m.dose} X ${m.freq}</span>${m.timing ? `<span class="font-semibold" style="color:var(--gold);"> • ${m.timing}</span>` : ''}</div><div class="text-left flex-shrink-0 font-arabic text-[10px] leading-relaxed" style="color:var(--muted);max-width:140px;">${m.instruction}</div></div>`).join('')}</div></div>`;
                 }).join('');
             }
-
             updateCounter();
         }
-
         function updateCounter() {
-            const total = patients.length;
-            const sel = selectedIds.size;
-            $('counterText').textContent = `${total} مريض`;
-            $('counterBadge').classList.toggle('hidden', total === 0);
-            $('btnPDF').disabled = sel === 0;
-            $('emptyState').classList.toggle('hidden', total > 0);
-            $('selAll').checked = total > 0 && total === sel;
+            const t = patients.length, s = selectedIds.size;
+            $('counterText').textContent = `${t} مريض`; $('counterBadge').classList.toggle('hidden', !t);
+            $('btnPDF').disabled = !s; $('emptyState').classList.toggle('hidden', t > 0);
+            $('selAll').checked = t > 0 && t === s;
         }
 
         // =============================================
-        // PDF GENERATION
+        // PDF GENERATION — UPDATED STRUCTURE
         // =============================================
-        async function generatePDF(patientList) {
-            if (patientList.length === 0) {
-                showToast('لا يوجد مرضى محددين', 'error');
-                return;
-            }
+        const ROWS_PER_PAGE = 9;
 
+        async function generatePDF(patientList) {
+            if (!patientList.length) { showToast('لا يوجد مرضى محددين', 'error'); return; }
             showToast('جاري إنشاء PDF...', 'info');
             const container = $('pdf-render-container');
             container.innerHTML = '';
-
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
             for (let pi = 0; pi < patientList.length; pi++) {
                 const p = patientList[pi];
                 const meds = p.meds || [];
-                const totalRows = Math.max(10, meds.length + 6);
-                const printDate = new Date().toLocaleDateString('ar-IQ', {
-                    year: 'numeric', month: 'long', day: 'numeric'
-                });
+                const totalPages = Math.ceil(meds.length / ROWS_PER_PAGE);
+                const printDate = new Date().toLocaleDateString('ar-IQ', { year: 'numeric', month: 'long', day: 'numeric' });
 
-                const pageDiv = document.createElement('div');
-                pageDiv.className = 'pdf-page';
-                pageDiv.innerHTML = `
-                    <div class="pdf-title">ورقة استشارة دوائية للمريض</div>
-                    <div class="pdf-subtitle">Patient Medication Counseling Sheet</div>
+                for (let pg = 0; pg < totalPages; pg++) {
+                    const start = pg * ROWS_PER_PAGE;
+                    const pageMeds = meds.slice(start, start + ROWS_PER_PAGE);
+                    const emptyCount = ROWS_PER_PAGE - pageMeds.length;
+                    const isCont = pg > 0;
+                    const isLast = pg === totalPages - 1;
+                    const dispName = isCont ? p.name + ' (تابع)' : p.name;
 
-                    <div class="pdf-info-row">
-                        <div class="pdf-info-item">
-                            <span class="pdf-info-label">اسم المريض:</span>
-                            <span class="pdf-info-value">${p.name}</span>
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'pdf-page';
+                    pageDiv.innerHTML = `
+                        <div class="pdf-title">ورقة استشارة دوائية للمريض</div>
+                        <div class="pdf-subtitle">Patient Medication Counseling Sheet</div>
+                        <div class="pdf-info-row">
+                            <div class="pdf-info-item"><span class="pdf-info-label">اسم المريض:</span><span class="pdf-info-value">${dispName}</span></div>
+                            <div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${p.room}</span></div>
+                            <div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${p.bed}</span></div>
+                            <div class="pdf-info-item"><span class="pdf-info-label">التاريخ:</span><span class="pdf-info-value">${printDate}</span></div>
                         </div>
-                        <div class="pdf-info-item">
-                            <span class="pdf-info-label">الغرفة:</span>
-                            <span class="pdf-info-value">${p.room}</span>
-                        </div>
-                        <div class="pdf-info-item">
-                            <span class="pdf-info-label">السرير:</span>
-                            <span class="pdf-info-value">${p.bed}</span>
-                        </div>
-                        <div class="pdf-info-item">
-                            <span class="pdf-info-label">التاريخ:</span>
-                            <span class="pdf-info-value">${printDate}</span>
-                        </div>
-                    </div>
-
-                    <table class="pdf-table">
-                        <thead>
-                            <tr>
-                                <th style="width:5%;">#</th>
-                                <th style="width:20%;">اسم الدواء</th>
-                                <th style="width:13%;">الجرعة</th>
-                                <th style="width:18%;">التكرار / الوقت</th>
-                                <th style="width:44%;">التعليمات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${meds.map((m, i) => `
+                        <table class="pdf-table">
+                            <thead>
                                 <tr>
-                                    <td style="font-weight:700;">${i + 1}</td>
-                                    <td style="font-weight:700; text-align:right; direction:rtl;">${m.drugName}</td>
-                                    <td style="font-weight:700;">${m.dose}</td>
-                                    <td style="text-align:right; direction:rtl; font-size:9pt;">
-                                        ${FREQ_ARABIC[m.freq] || ''}<br>
-                                        <span style="color:#14532D; font-size:8.5pt; font-weight:700;">${m.timing || ''}</span>
-                                    </td>
-                                    <td class="instruction-cell">
-                                        <div style="font-weight:800; font-size:9.5pt;">${m.instruction}</div>
-                                        ${m.warningText ? `<div class="warning-cell">${m.warningText}</div>` : ''}
-                                    </td>
+                                    <th class="pill-col"></th>
+                                    <th class="name-col">اسم الدواء</th>
+                                    <th class="dose-col">الجرعة</th>
+                                    <th class="instr-col">التعليمات</th>
                                 </tr>
-                            `).join('')}
-                            ${Array.from({ length: totalRows - meds.length }, (_, i) => `
-                                <tr>
-                                    <td>${meds.length + i + 1}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                ${pageMeds.map(m => `
+                                    <tr>
+                                        <td class="pill-col"></td>
+                                        <td class="name-col" style="font-weight:700;">${m.drugName}</td>
+                                        <td class="dose-col" style="font-weight:700;">${m.dose} X ${m.freq}</td>
+                                        <td class="instr-col">
+                                            <div class="instr-bold">${m.instruction}</div>
+                                            ${m.timing ? `<div style="color:#14532D;font-weight:700;font-size:8.5pt;margin-top:0.5mm;">${m.timing}</div>` : ''}
+                                            ${m.warningText ? `<div class="warning-cell">${m.warningText}</div>` : ''}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                                ${Array.from({ length: emptyCount }, () => `
+                                    <tr>
+                                        <td class="pill-col"></td>
+                                        <td class="name-col"></td>
+                                        <td class="dose-col"></td>
+                                        <td class="instr-col"></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${isLast ? `
+                        <div class="pdf-page-spacer"></div>
+                        <div class="pdf-footer">
+                            <div>
+                                <div class="pdf-sig-label">توقيع الصيدلاني السريري</div>
+                                <div class="pdf-sig-line"></div>
+                            </div>
+                            <div style="text-align:left;direction:ltr;font-size:7pt;color:#bbb;">Clinical Pharmacy Counseling Tool</div>
+                        </div>` : ''}
+                    `;
 
-                    <div class="pdf-footer">
-                        <div>
-                            <div class="pdf-sig-label">توقيع الصيدلاني السريري</div>
-                            <div class="pdf-sig-line"></div>
-                        </div>
-                        <div style="text-align:left; direction:ltr; font-size:7pt; color:#999;">
-                            Generated by Clinical Pharmacy Counseling Tool
-                        </div>
-                    </div>
-                `;
+                    container.appendChild(pageDiv);
+                    await document.fonts.ready;
+                    await new Promise(r => setTimeout(r, 200));
 
-                container.appendChild(pageDiv);
+                    const canvas = await html2canvas(pageDiv, {
+                        scale: 2.5, useCORS: true, logging: false, backgroundColor: '#ffffff',
+                        width: pageDiv.offsetWidth, height: pageDiv.offsetHeight
+                    });
 
-                await document.fonts.ready;
-                await new Promise(r => setTimeout(r, 200));
-
-                const canvas = await html2canvas(pageDiv, {
-                    scale: 2.5,
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    width: pageDiv.offsetWidth,
-                    height: pageDiv.offsetHeight
-                });
-
-                const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                if (pi > 0) doc.addPage();
-                doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-
-                container.removeChild(pageDiv);
+                    if (pi > 0 || pg > 0) doc.addPage();
+                    doc.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', 0, 0, 210, 297);
+                    container.removeChild(pageDiv);
+                }
             }
 
-            const filename = patientList.length === 1
+            const fn = patientList.length === 1
                 ? `Counseling_${patientList[0].name}_${patientList[0].room}.pdf`
                 : `Counseling_Batch_${new Date().toISOString().split('T')[0]}.pdf`;
-            doc.save(filename);
+            doc.save(fn);
             showToast('تم إنشاء PDF بنجاح');
         }
 
-        // =============================================
-        // GLOBAL HANDLERS
-        // =============================================
-        window._toggleSelect = (id) => {
-            if (selectedIds.has(id)) selectedIds.delete(id);
-            else selectedIds.add(id);
-            renderQueue();
-        };
+        // Global handlers
+        window._toggleSelect = (id) => { if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id); renderQueue(); };
+        window._deletePatient = (id) => deletePatient(id);
+        window._printSingle = async (id) => { const p = patients.find(x => x.id === id); if (p) await generatePDF([p]); };
 
-        window._deletePatient = async (id) => {
-            await deletePatient(id);
-        };
-
-        window._printSingle = async (id) => {
-            const p = patients.find(px => px.id === id);
-            if (p) await generatePDF([p]);
-        };
-
-        // =============================================
-        // EVENT LISTENERS
-        // =============================================
+        // Events
         $('selCategory').addEventListener('change', updateDrugDropdown);
         $('selDrug').addEventListener('change', onDrugSelected);
         $('selPills').addEventListener('change', updatePreview);
@@ -1141,42 +485,15 @@
         $('selWarning').addEventListener('change', updatePreview);
         $('inpDose').addEventListener('input', updatePreview);
         $('inpCustomDrug').addEventListener('input', updatePreview);
-
         $('btnAddMed').addEventListener('click', addMedication);
-        $('btnClearMeds').addEventListener('click', () => {
-            currentMeds = [];
-            renderMedsList();
-        });
+        $('btnClearMeds').addEventListener('click', () => { currentMeds = []; renderMedsList(); });
         $('btnSave').addEventListener('click', savePatient);
-
-        $('selAll').addEventListener('change', (e) => {
-            if (e.target.checked) {
-                patients.forEach(p => selectedIds.add(p.id));
-            } else {
-                selectedIds.clear();
-            }
-            renderQueue();
-        });
-
+        $('selAll').addEventListener('change', (e) => { if (e.target.checked) patients.forEach(p => selectedIds.add(p.id)); else selectedIds.clear(); renderQueue(); });
         $('filterRoom').addEventListener('input', () => renderQueue());
+        $('btnPDF').addEventListener('click', async () => { await generatePDF(patients.filter(p => selectedIds.has(p.id))); });
+        $('btnClearQueue').addEventListener('click', () => { if (!patients.length) return; patients.forEach(p => deleteDoc(doc(db, "counseling_patients", p.id)).catch(() => {})); selectedIds.clear(); showToast('تم مسح الطابور', 'info'); });
 
-        $('btnPDF').addEventListener('click', async () => {
-            const sel = patients.filter(p => selectedIds.has(p.id));
-            await generatePDF(sel);
-        });
-
-        $('btnClearQueue').addEventListener('click', () => {
-            if (patients.length === 0) return;
-            patients.forEach(p => {
-                deleteDoc(doc(db, "counseling_patients", p.id)).catch(() => {});
-            });
-            selectedIds.clear();
-            showToast('تم مسح الطابور', 'info');
-        });
-
-        // =============================================
-        // INIT
-        // =============================================
+        // Init
         initDarkMode();
         updateDrugDropdown();
         startListener();

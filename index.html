@@ -12,7 +12,7 @@
         :root{--bg:#FAF8F3;--fg:#1C1917;--muted:#78716C;--muted-lt:#A8A29E;--accent:#14532D;--accent-mid:#166534;--accent-lt:#22C55E;--gold:#B8860B;--gold-lt:#DAA520;--card:#FFFFFF;--border:#E7E5E0;--surface:#F0EDE6;--danger:#991B1B;}
         body.dark-mode{--bg:#0C0F0A;--fg:#E7E5E0;--muted:#A8A29E;--muted-lt:#78716C;--accent:#22C55E;--accent-mid:#16A34A;--accent-lt:#4ADE80;--gold:#DAA520;--gold-lt:#F59E0B;--card:#1A1D16;--border:#2E3228;--surface:#14170F;--danger:#F87171;}
         *{font-family:'DM Sans','Cairo',sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;box-sizing:border-box;}
-        .font-display{font-family:'Playfair Display',seri;}body{background:var(--bg);color:var(--fg);transition:background .4s,color .4s;min-height:100vh;}
+        .font-display{font-family:'Playfair Display',serif;}body{background:var(--bg);color:var(--fg);transition:background .4s,color .4s;min-height:100vh;}
         body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(20,83,45,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(184,134,11,.04) 0%,transparent 50%);pointer-events:none;z-index:0;}
         body.dark-mode::before{background:radial-gradient(ellipse at 20% 0%,rgba(34,197,94,.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(218,165,32,.03) 0%,transparent 50%);}
         ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--surface);}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
@@ -96,7 +96,7 @@
         #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
         .patient-card{opacity:0;animation:fadeUp .5s cubic-bezier(.22,1,.36,1) forwards;}
         .patient-card:nth-child(1){animation-delay:0s;}.patient-card:nth-child(2){animation-delay:.06s;}.patient-card:nth-child(3){animation-delay:.12s;}.patient-card:nth-child(4){animation-delay:.18s;}.patient-card:nth-child(5){animation-delay:.24s;}.patient-card:nth-child(6){animation-delay:.3s;}
-        .modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;}
+        .modal-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:16px;}
         .modal-overlay.modal-active{display:flex;}
         .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);}
         .modal-content{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.2);}
@@ -106,8 +106,7 @@
     </style>
 </head>
 <body>
-    <!-- ===== LOGIN OVERLAY ===== -->
-    <div id="loginOverlay" class="login-overlay">
+    <div id="loginOverlay" class="login-overlay login-active">
         <div class="login-bg"></div>
         <div class="login-card anim-fade-up">
             <div class="text-center mb-10">
@@ -133,8 +132,7 @@
         </div>
     </div>
 
-    <!-- ===== MAIN APP ===== -->
-    <div id="mainApp" style="position:relative;z-index:1;">
+    <div id="mainApp" style="display:none;position:relative;z-index:1;">
         <header class="sticky top-0 z-50 border-b border-[var(--border)]" style="background:rgba(250,248,243,.92);backdrop-filter:blur(16px);">
             <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -211,7 +209,6 @@
         </main>
     </div>
 
-    <!-- Print Modal -->
     <div id="printModal" class="modal-overlay">
         <div class="modal-backdrop" onclick="window._closePrintModal()"></div>
         <div class="modal-content anim-modal">
@@ -240,7 +237,6 @@
         const WARNING_ARABIC={milk:'لا تؤخذ مع الحليب',drowsy:'تسبب النعاس',water:'اشرب كميات كافية من الماء',crush:'لا تسحق القرص'};
 
         let patients=[],currentMeds=[],modalSelectedIds=new Set(),editingPatientId=null;
-        // جلسة المستخدم: { username, wardId, wardName }
         let currentUser=null;
         const $=id=>document.getElementById(id);
         const AR='٠١٢٣٤٥٦٧٨٩',EN='0123456789';
@@ -252,9 +248,6 @@
         function showToast(msg,type='success'){const c={success:'background:#14532D;color:white;',error:'background:#991B1B;color:white;',info:'background:#1C1917;color:white;'};const t=$('toast');$('toastMsg').textContent=msg;t.style.cssText+=c[type]||c.info;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
         function setConnection(o){$('connDot').classList.toggle('offline',!o);$('connText').textContent=o?'متصل':'غير متصل';}
 
-        // =============================================
-        // LOGIN SYSTEM
-        // =============================================
         function initDarkMode(){const d=localStorage.getItem('counseling_theme')==='dark';document.body.classList.toggle('dark-mode',d);$('iconMoon').classList.toggle('hidden',d);$('iconSun').classList.toggle('hidden',!d);}
         $('darkToggle').addEventListener('click',()=>{const d=document.body.classList.toggle('dark-mode');localStorage.setItem('counseling_theme',d?'dark':'light');$('iconMoon').classList.toggle('hidden',d);$('iconSun').classList.toggle('hidden',!d);});
 
@@ -262,36 +255,25 @@
             const user=$('loginUser').value.trim();
             const pass=$('loginPass').value.trim();
             if(!user||!pass){$('loginError').textContent='أدخل اسم المستخدم وكلمة المرور';return;}
-            $('loginError').classList.remove('hidden');$('loginLoader').classList.remove('hidden');$('loginBtn').disabled=true;
+            $('loginError').textContent='';$('loginLoader').classList.remove('hidden');$('loginBtn').disabled=true;
 
             try{
-                // البحث عن المستخدم في مجموعة users_config
                 const q=query(usersRef,where("username","==",user),where("password","==",pass));
                 const snapshot=await getDocs(q);
-
                 if(snapshot.empty){
                     $('loginError').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
                     $('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
                     return;
                 }
-
                 const userDoc=snapshot.docs[0].data();
-                currentUser={
-                    username:user,
-                    wardId:userDoc.wardId||'',
-                    wardName:userDoc.wardName||''
-                };
-
-                // حفظ الجلسة
+                currentUser={username:user,wardId:userDoc.wardId||'',wardName:userDoc.wardName||''};
                 sessionStorage.setItem('counseling_session',JSON.stringify(currentUser));
-
-                // إظهار التطبيق
                 $('loginOverlay').classList.remove('login-active');
+                $('mainApp').style.display='block';
                 showWardBadge();
                 startApp();
                 showToast('مرحباً '+currentUser.wardName);
             }catch(err){
-                console.error('Login error:',err);
                 $('loginError').textContent='خطأ في الاتصال. تأكد من الإنترنت.';
                 $('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
             }
@@ -302,11 +284,10 @@
             currentUser=null;
             $('loginOverlay').classList.add('login-active');
             $('loginUser').value='';$('loginPass').value='';
-            $('loginError').classList.add('hidden');$('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
+            $('loginError').textContent='';$('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
             $('mainApp').style.display='none';
             $('wardBadge').classList.add('hidden');
-            // إيقاف المستمع إذا كان يعمل
-            if(window._unsubscribeListener){window._unsubscribeListener();}
+            if(unsubscribeFn)unsubscribeFn();
         }
 
         function showWardBadge(){
@@ -317,70 +298,38 @@
         }
 
         $('loginBtn').addEventListener('click',attemptLogin);
-        $('loginUser').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
-        $('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
         $('logoutBtn').addEventListener('click',logout);
 
-        // التحقق من جلسة سابقة عند التحميل
-        const savedSession=sessionStorage.getItem('counseling_session');
-        if(savedSession){
-            try{currentUser=JSON.parse(savedSession);showWardBadge();startApp();}
-            catch(e){sessionStorage.removeItem('counseling_session');}
-        }else{
-            $('mainApp').style.display='none';
-        }
-
-        // =============================================
-        // DRUG DROPDOWN LOGIC
-        // =============================================
         function updateDrugDropdown(){const c=$('selCategory').value,s=$('selDrug'),u=$('inpCustomDrug');s.innerHTML='';u.classList.add('hidden');s.disabled=true;if(!c){s.innerHTML='<option value="">-- اختر التصنيف أولاً --</option>';return;}s.disabled=false;if(c==='others'){u.classList.remove('hidden');s.innerHTML='<option value="custom">إدخال يدوي</option>';return;}const d=DRUG_DB[c]||[];s.innerHTML='<option value="">-- اختر الدواء --</option>'+d.map(x=>`<option value="${x.name}" data-dose="${x.defaultDose}">${x.name}</option>`).join('');}
         function onDrugSelected(){const v=$('selDrug').value;if(v&&v!=='custom')$('inpDose').value=$('selDrug').selectedOptions[0].dataset.dose||'';else if(v!=='custom')$('inpDose').value='';updatePreview();}
         function updatePreview(){const p=parseInt($('selPills').value)||1,m=$('selMethod').value,f=parseInt($('selFreq').value)||1,w=$('selWarning').value,t=$('selTiming').value;$('previewText').textContent=generateArabicInstruction(p,m,f);$('previewBox').classList.remove('hidden');if(t){$('previewTiming').textContent='الوقت: '+t;$('previewTiming').classList.remove('hidden');}else $('previewTiming').classList.add('hidden');if(w&&WARNING_ARABIC[w]){$('previewWarning').textContent='تنبيه: '+WARNING_ARABIC[w];$('previewWarning').classList.remove('hidden');}else $('previewWarning').classList.add('hidden');const c=$('selCategory').value,dv=$('selDrug').value,cn=c==='others'?$('inpCustomDrug').value.trim():'';$('btnAddMed').disabled=!(c&&((dv&&dv!=='custom')||(dv==='custom'&&cn))&&$('inpDose').value.trim());}
 
-        // =============================================
-        // ADD / REMOVE MEDICATION
-        // =============================================
         function addMedication(){const c=$('selCategory').value,dv=$('selDrug').value;let dn=dv==='custom'?$('inpCustomDrug').value.trim():dv;const dose=$('inpDose').value.trim(),pills=parseInt($('selPills').value)||1,freq=parseInt($('selFreq').value)||1,timing=$('selTiming').value,method=$('selMethod').value,warning=$('selWarning').value;if(!dn||!dose){showToast('أكمل بيانات الدواء','error');return;}if(currentMeds.some(x=>x.drugName.toLowerCase()===dn.toLowerCase())){showToast('هذا الدواء مضاف مسبقاً','error');return;}currentMeds.push({id:generateId(),category:c,drugName:dn,dose,pills,freq,timing,method,warning,instruction:generateArabicInstruction(pills,method,freq),warningText:warning?WARNING_ARABIC[warning]:''});renderMedsList();showToast('تمت إضافة الدواء');$('selDrug').value=c==='others'?'custom':'';$('inpDose').value='';if(c==='others')$('inpCustomDrug').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;}
         function removeMed(i){currentMeds.splice(i,1);renderMedsList();}
         window._removeMed=removeMed;
 
         function renderMedsList(){const s=$('currentMedsSection'),l=$('medsList');if(!currentMeds.length){s.classList.add('hidden');return;}s.classList.remove('hidden');$('medCount').textContent=currentMeds.length;l.innerHTML=currentMeds.map((m,i)=>`<div class="anim-slide-right flex items-start justify-between gap-3 p-3 rounded-xl" style="background:var(--surface);border:1px solid var(--border);animation-delay:${i*.05}s;"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-[var(--fg)] text-sm">${m.drugName}</span><span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background:rgba(20,83,45,.08);color:var(--accent);">${m.dose} X ${m.freq}</span>${m.timing?`<span class="text-xs font-semibold" style="color:var(--gold);">${m.timing}</span>`:''}</div><p class="font-arabic text-sm font-bold mt-1" style="color:var(--fg);">${m.instruction}</p>${m.warningText?`<p class="font-arabic text-xs font-bold mt-0.5" style="color:var(--danger);">${m.warningText}</p>`:''}</div><button onclick="window._removeMed(${i})" class="p-1.5 rounded-lg hover:bg-red-50 transition-colors flex-shrink-0 mt-0.5" style="color:var(--danger);"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`).join('');}
 
-        // =============================================
-        // EDIT MODE
-        // =============================================
         function enterEditMode(id){const p=patients.find(x=>x.id===id);if(!p)return;editingPatientId=id;$('inpName').value=p.name;$('inpRoom').value=p.room;$('inpBed').value=p.bed;currentMeds=[...p.meds];renderMedsList();$('btnSaveText').textContent='تحديث بيانات المريض';$('btnSave').classList.remove('btn-gold');$('btnSave').classList.add('btn-update');$('btnCancelEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});}
         window._editPatient=enterEditMode;
         function exitEditMode(){editingPatientId=null;$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();$('btnSaveText').textContent='حفظ المريض في الطابور';$('btnSave').classList.add('btn-gold');$('btnSave').classList.remove('btn-update');$('btnCancelEdit').classList.add('hidden');}
         $('btnCancelEdit').addEventListener('click',exitEditMode);
 
-        // =============================================
-        // SAVE / UPDATE PATIENT (مع wardId تلقائي)
-        // =============================================
         async function saveOrUpdatePatient(){
             const name=$('inpName').value.trim(),room=$('inpRoom').value.trim(),bed=$('inpBed').value.trim();
             if(!name||!room||!bed){showToast('أكمل بيانات المريض','error');return;}
             if(!currentMeds.length){showToast('أدخل دواء واحد على الأقل','error');return;}
-            // إرفاق wardId تلقائياً من الجلسة الحالية
             const data={name,room,bed,meds:[...currentMeds],wardId:currentUser?currentUser.wardId:'',saveDate:new Date().toISOString()};
             if(editingPatientId){showToast('جاري التحديث...','info');try{await updateDoc(doc(db,"counseling_patients",editingPatientId),data);exitEditMode();showToast('تم التحديث بنجاح');}catch(e){showToast('فشل التحديث','error');}}
             else{showToast('جاري الحفظ...','info');try{await addDoc(patientsRef,data);$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();showToast('تم الحفظ بنجاح');}catch(e){showToast('فشل الحفظ','error');}}
         }
 
-        // =============================================
-        // FIRESTORE — عزل البيانات حسب الجناح
-        // =============================================
         let unsubscribeFn=null;
-
         function startApp(){
-            $('mainApp').style.display='';
             if(unsubscribeFn)unsubscribeFn();
-
-            // إنشاء الاستعلام المفلتر حسب wardId
             const wardId=currentUser?currentUser.wardId:'__none__';
             let q=query(patientsRef,orderBy("saveDate","desc"));
             if(wardId){q=query(patientsRef,where("wardId","==",wardId),orderBy("saveDate","desc"));}
-
             unsubscribeFn=onSnapshot(q,
                 (snapshot)=>{setConnection(true);patients=snapshot.docs.map(d=>({id:d.id,...d.data()}));renderQueue();},
                 (err)=>{setConnection(false);showToast('فقد الاتصال','error');}
@@ -394,9 +343,6 @@
             catch(e){patients.unshift(b);renderQueue();showToast('فشل الحذف','error');}
         }
 
-        // =============================================
-        // RENDER QUEUE
-        // =============================================
         function renderQueue(){
             const f=toEnglishNums($('filterRoom').value.trim().toLowerCase());
             const filtered=f?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(f)):patients;
@@ -407,19 +353,14 @@
         }
         function updateCounter(){const t=patients.length;$('counterText').textContent=`${t} مريض`;$('counterBadge').classList.toggle('hidden',!t);$('emptyState').classList.toggle('hidden',t>0);}
 
-        // =============================================
-        // PRINT MODAL — مرتب حسب الغرفة تصاعدياً
-        // =============================================
         function openPrintModal(){if(!patients.length){showToast('لا يوجد مرضى','error');return;}modalSelectedIds.clear();$('modalSearch').value='';$('modalSelAll').checked=false;renderModalList();$('printModal').classList.add('modal-active');}
         function closePrintModal(){$('printModal').classList.remove('modal-active');}
         window._closePrintModal=closePrintModal;
 
         function renderModalList(){
-            const raw=$('modalSearch').value.trim();
-            const en=toEnglishNums(raw.toLowerCase());
+            const raw=$('modalSearch').value.trim(),en=toEnglishNums(raw.toLowerCase());
             let filtered=raw?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(en)||p.name.toLowerCase().includes(en)):[...patients];
-            // ترتيب تصاعدي حسب رقم الغرفة مع معالجة الأرقام العربية والإنجليزية
-            filtered.sort((a,b)=>{const ra=parseInt(toEnglishNums(a.room))||0;const rb=parseInt(toEnglishNums(b.room))||0;return ra-rb;});
+            filtered.sort((a,b)=>{const ra=parseInt(toEnglishNums(a.room))||0,rb=parseInt(toEnglishNums(b.room))||0;return ra-rb;});
             const list=$('modalPatientList');
             if(!filtered.length){list.innerHTML=`<div class="text-center py-8"><p class="text-[var(--muted)] font-arabic text-sm">لا توجد نتائج</p></div>`;}
             else{list.innerHTML=filtered.map(p=>{const ck=modalSelectedIds.has(p.id)?'checked':'';return`<label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors hover:bg-[var(--surface)]" style="border:1px solid var(--border);"><input type="checkbox" ${ck} onchange="window._toggleModalSelect('${p.id}')" class="w-4 h-4 rounded flex-shrink-0 accent-[var(--accent)]"><div class="flex-1 min-w-0"><p class="font-bold text-[var(--fg)] text-sm font-arabic">${p.name}</p><p class="text-xs text-[var(--muted)]">غرفة <span class="font-semibold">${normalizeDigits(p.room)}</span> • سرير ${normalizeDigits(p.bed)} • ${p.meds.length} أدوية</p></div><span class="px-2 py-1 rounded-lg text-xs font-bold flex-shrink-0" style="background:rgba(20,83,45,.08);color:var(--accent);">${normalizeDigits(p.room)}</span></label>`;}).join('');}
@@ -428,9 +369,6 @@
         function updateModalCount(){$('modalSelCount').textContent=modalSelectedIds.size;$('btnModalPrint').disabled=modalSelectedIds.size===0;if(patients.length>0)$('modalSelAll').checked=patients.every(p=>modalSelectedIds.has(p.id));}
         window._toggleModalSelect=(id)=>{if(modalSelectedIds.has(id))modalSelectedIds.delete(id);else modalSelectedIds.add(id);updateModalCount();renderModalList();};
 
-        // =============================================
-        // PDF — B&W، خطوط أكبر، 9 صفوف
-        // =============================================
         const ROWS_PER_PAGE=9;
         function buildPDFPage(patient,pageMeds,emptyCount,displayName,isLastPage){
             const printDate=new Date().toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'});
@@ -465,10 +403,6 @@
         }
 
         window._deletePatient=(id)=>deletePatient(id);
-
-        // =============================================
-        // EVENT LISTENERS
-        // =============================================
         $('selCategory').addEventListener('change',updateDrugDropdown);
         $('selDrug').addEventListener('change',onDrugSelected);
         $('inpCustomDrug').addEventListener('input',updatePreview);
@@ -482,12 +416,28 @@
         $('btnClearMeds').addEventListener('click',()=>{currentMeds=[];renderMedsList();});
         $('btnSave').addEventListener('click',saveOrUpdatePatient);
         $('filterRoom').addEventListener('input',()=>renderQueue());
-        $('btnClearQueue').addEventListener('click',()=>{if(!patients.length)return;if(editingPatientId)exitEditMode();patients.forEach(p=>{deleteDoc(doc(db,"counseling_patients",p.id)).catch(()=>{});});showToast('تم مسح الطابور','info');});
+        $('btnClearQueue').addEventListener('click',()=>{if(!patients.length)return;patients.forEach(p=>{deleteDoc(doc(db,"counseling_patients",p.id)).catch(()=>{});});showToast('تم مسح الطابور','info');});
         $('btnOpenPrintModal').addEventListener('click',openPrintModal);
         $('modalSearch').addEventListener('input',()=>renderModalList());
         $('modalSelAll').addEventListener('change',(e)=>{if(e.target.checked)patients.forEach(p=>modalSelectedIds.add(p.id));else modalSelectedIds.clear();updateModalCount();renderModalList();});
         $('btnModalPrint').addEventListener('click',async()=>{await generatePDF(patients.filter(p=>modalSelectedIds.has(p.id)));closePrintModal();});
-        document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&$('printModal').classList.contains('modal-active'))closePrintModal();});
+        
+        // SESSION CHECK LOGIC
+        const savedSession=sessionStorage.getItem('counseling_session');
+        if(savedSession){
+            try{
+                currentUser=JSON.parse(savedSession);
+                $('loginOverlay').classList.remove('login-active');
+                $('mainApp').style.display='block';
+                showWardBadge();
+                startApp();
+            }catch(e){
+                sessionStorage.removeItem('counseling_session');
+                $('loginOverlay').classList.add('login-active');
+            }
+        } else {
+            $('loginOverlay').classList.add('login-active');
+        }
 
         initDarkMode();updateDrugDropdown();
     </script>

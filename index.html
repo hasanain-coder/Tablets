@@ -181,7 +181,24 @@
                     </div>
                     <div class="med-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التكرار</label><select id="selFreq" class="w-full px-4 py-3 rounded-xl"><option value="1">مرة واحدة يومياً</option><option value="2">مرتين يومياً</option><option value="3">ثلاث مرات يومياً</option><option value="4">أربع مرات يومياً</option></select></div>
-                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="١٢ ليلاً">١٢ ليلاً</option><option value="١٢ ظهراً">١٢ ظهراً</option><option value="٨ صباحاً">٨ صباحاً</option><option value="٨ صباحاً و٤ عصراً">٨ صباحاً و٤ عصراً</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="٨ صباحاً">٨ صباحاً</option>
+<option value="٩ صباحاً">٩ صباحاً</option>
+<option value="١٠ صباحاً">١٠ صباحاً</option>
+<option value="١١ صباحاً">١١ صباحاً</option>
+<option value="١٢ ظهراً">١٢ ظهراً</option>
+<option value="٢ ظهراً">٢ ظهراً</option>
+<option value="٣ ظهراً">٣ ظهراً</option>
+<option value="٤ عصراً">٤ عصراً</option>
+<option value="٥ عصراً">٥ عصراً</option>
+<option value="٦ مساءاً">٦ مساءاً</option>
+<option value="٩ ليلاً">٩ ليلاً</option>
+<option value="١٠ ليلاً">١٠ ليلاً</option>
+<option value="١٠ صباحاً-١٠ ليلاً">١٠ صباحاً-١٠ ليلاً</option>
+<option value="١٢ ظهراً-١٢ ليلاً">١٢ ظهراً-١٢ ليلاً</option>
+<option value="١٢ ظهراً-٨ ليلاً">١٢ ظهراً-٨ ليلاً</option>
+<option value="٨ صباحاً-٤ عصراً-١٢ ليلاً">٨ صباحاً-٤ عصراً-١٢ ليلاً</option>
+<option value="٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً">٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً</option>
+</select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">طريقة الإعطاء</label><select id="selMethod" class="w-full px-4 py-3 rounded-xl"><option value="after">بعد الطعام</option><option value="before">قبل الطعام</option></select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">ملاحظات تحذيرية</label><select id="selWarning" class="w-full px-4 py-3 rounded-xl"><option value="">بدون</option><option value="milk">لا تؤخذ مع الحليب</option><option value="drowsy">تسبب النعاس</option><option value="water">اشرب كميات كافية من الماء</option><option value="crush">لا تسحق القرص</option></select></div>
                     </div>
@@ -230,7 +247,7 @@
         const usersRef=collection(db,"users_config");
         const patientsRef=collection(db,"counseling_patients");
 
-        const DRUG_DB={cardiac:[{name:'Aspirin',defaultDose:'75mg'},{name:'Plavix (Clopidogrel)',defaultDose:'75mg'},{name:'Atorvastatin',defaultDose:'20mg'},{name:'Bisoprolol',defaultDose:'5mg'}],antibiotics:[{name:'Amoxicillin',defaultDose:'500mg'},{name:'Augmentin',defaultDose:'625mg'},{name:'Azithromycin',defaultDose:'500mg'}],others:[]};
+        const DRUG_DB={cardiac:[{name:'اسبرين',defaultDose:'100mg'},{name:'بلافكس',defaultDose:'75mg'},{name:'افاس',defaultDose:'20mg'},{name:'كونكور',defaultDose:'5mg'},{name:'كرستور',defaultDose:'20mg'},{name:'الداكتون',defaultDose:'25mg'},{name:'تورسميد',defaultDose:'10mg'},{name:'املودبين',defaultDose:'5mg'},{name:'كابوتين',defaultDose:'25mg'},{name:'لزنوبريل',defaultDose:'10mg'},{name:'كارفدول',defaultDose:'6.25mg'}],antibiotics:[{name:'ازثرومايسين',defaultDose:'500mg'},{name:'ليفوفلوكساسين',defaultDose:'500mg'},{name:'مثبريم',defaultDose:'480mg'}],others:[]};
         const PILLS_ARABIC={1:'حبة واحدة',2:'حبتين',3:'ثلاث حبات',4:'أربع حبات',5:'خمس حبات'};
         const FREQ_ARABIC={1:'مرة واحدة',2:'مرتين',3:'ثلاث مرات',4:'أربع مرات'};
         const METHOD_ARABIC={before:'قبل الطعام',after:'بعد الطعام'};

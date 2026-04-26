@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة تثقيف المريض الدوائي | Clinical Pharmacy Counseling</title>
+    <title>أداة تثقيف المريض الدوائي | Clinical Pharmacy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#FAF8F3;--fg:#1C1917;--fg-sec:#44403C;--muted:#78716C;--muted-lt:#A8A29E;--accent:#14532D;--accent-mid:#166534;--accent-lt:#22C55E;--gold:#B8860B;--gold-lt:#DAA520;--card:#FFFFFF;--border:#E7E5E0;--surface:#F0EDE6;--danger:#991B1B;}
-        body.dark-mode{--bg:#0C0F0A;--fg:#E7E5E0;--fg-sec:#D6D3CE;--muted:#A8A29E;--muted-lt:#78716C;--accent:#22C55E;--accent-mid:#16A34A;--accent-lt:#4ADE80;--gold:#DAA520;--gold-lt:#F59E0B;--card:#1A1D16;--border:#2E3228;--surface:#14170F;--danger:#F87171;}
+        :root{--bg:#FAF8F3;--fg:#1C1917;--muted:#78716C;--muted-lt:#A8A29E;--accent:#14532D;--accent-mid:#166534;--accent-lt:#22C55E;--gold:#B8860B;--gold-lt:#DAA520;--card:#FFFFFF;--border:#E7E5E0;--surface:#F0EDE6;--danger:#991B1B;}
+        body.dark-mode{--bg:#0C0F0A;--fg:#E7E5E0;--muted:#A8A29E;--muted-lt:#78716C;--accent:#22C55E;--accent-mid:#16A34A;--accent-lt:#4ADE80;--gold:#DAA520;--gold-lt:#F59E0B;--card:#1A1D16;--border:#2E3228;--surface:#14170F;--danger:#F87171;}
         *{font-family:'DM Sans','Cairo',sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;box-sizing:border-box;}
-        .font-display{font-family:'Playfair Display',serif;}body{background:var(--bg);color:var(--fg);transition:background .4s,color .4s;min-height:100vh;}
+        .font-display{font-family:'Playfair Display',seri;}body{background:var(--bg);color:var(--fg);transition:background .4s,color .4s;min-height:100vh;}
         body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(20,83,45,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(184,134,11,.04) 0%,transparent 50%);pointer-events:none;z-index:0;}
         body.dark-mode::before{background:radial-gradient(ellipse at 20% 0%,rgba(34,197,94,.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(218,165,32,.03) 0%,transparent 50%);}
         ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--surface);}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
@@ -21,6 +21,7 @@
         @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.3);}50%{box-shadow:0 0 20px 4px rgba(34,197,94,.15);}}
         @keyframes shimmer{0%{background-position:-200% 0;}100%{background-position:200% 0;}}
         @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
+        @keyframes loginPulse{0%,100%{opacity:.4;}50%{opacity:1;}}
         .anim-fade-up{animation:fadeUp .6s cubic-bezier(.22,1,.36,1) forwards;}
         .anim-slide-right{animation:slideRight .5s cubic-bezier(.22,1,.36,1) forwards;}
         .anim-modal{animation:modalIn .3s cubic-bezier(.22,1,.36,1) forwards;}
@@ -45,10 +46,23 @@
         .live-dot.offline{background:#EF4444;animation:none;}
         .instruction-preview{background:linear-gradient(135deg,rgba(20,83,45,.06),rgba(184,134,11,.04));border:1.5px solid rgba(20,83,45,.15);border-radius:12px;padding:16px;direction:rtl;text-align:right;}
         body.dark-mode .instruction-preview{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(218,165,32,.05));border-color:rgba(34,197,94,.2);}
+        .ward-badge{font-size:11px;padding:2px 10px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
 
-        /* =============================================
-           PDF Styles — Black & White Optimized
-           ============================================= */
+        /* Login Overlay */
+        .login-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;}
+        .login-overlay.login-active{display:flex;}
+        .login-bg{position:absolute;inset:0;background:linear-gradient(160deg,#0A1F0E 0%,#14532D 35%,#1A0F00 100%);}
+        .login-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(218,165,32,.08) 0%,transparent 60%),radial-gradient(circle at 70% 70%,rgba(34,197,94,.05) 0%,transparent 50%);}
+        .login-bg::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,rgba(0,0,0,.3),transparent);}
+        .login-card{position:relative;background:rgba(255,255,255,.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:44px 40px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,.4);}
+        .login-input{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:white;padding:14px 18px;border-radius:14px;width:100%;font-size:15px;transition:all .3s;}
+        .login-input:focus{outline:none;border-color:rgba(218,165,32,.6);box-shadow:0 0 0 3px rgba(218,165,32,.12);background:rgba(255,255,255,.1);}
+        .login-input::placeholder{color:rgba(255,255,255,.35);}
+        .login-input:-webkit-autofill{-webkit-box-shadow:0 0 0 30px rgba(255,255,255,.07) inset!important;-webkit-text-fill-color:white!important;}
+        .login-error{color:#FCA5A5;font-size:13px;text-align:center;min-height:20px;font-family:'Cairo',sans-serif;}
+        .login-loader{color:rgba(255,255,255,.6);font-size:13px;text-align:center;font-family:'Cairo',sans-serif;animation:loginPulse 1.2s ease infinite;}
+
+        /* PDF — B&W */
         #pdf-render-container{position:absolute;left:-9999px;top:0;z-index:-1000;opacity:0;pointer-events:none;}
         .pdf-page{width:210mm;height:297mm;padding:10mm 12mm;background:#fff;box-sizing:border-box;font-family:'Cairo',sans-serif;direction:rtl;color:#000;display:flex;flex-direction:column;}
         .pdf-title{text-align:center;font-size:16pt;font-weight:800;color:#000;margin-bottom:1.5mm;flex-shrink:0;}
@@ -66,17 +80,12 @@
         .pdf-row:last-child{border-bottom:none;}
         .pdf-cell{border-left:1px solid #000;padding:1.5mm 2mm;display:flex;align-items:center;justify-content:center;font-size:9pt;overflow:hidden;background:#fff;}
         .pdf-cell:last-child{border-left:none;}
-
-        /* اسم الدواء والجرعة — حجم أكبر بنسبة 50% */
         .cell-name{font-weight:800;text-align:center;direction:ltr;font-size:13.5pt;}
         .cell-dose{font-weight:800;text-align:center;direction:ltr;font-size:13.5pt;}
-
-        /* التعليمات — حجم أكبر بنسبة 20% */
         .cell-instr{align-items:flex-start;justify-content:flex-start;text-align:right;direction:rtl;font-weight:600;line-height:1.6;font-size:10.2pt;padding:1.5mm 2.5mm;background:#fff;}
         .instr-main{font-weight:800;font-size:10.8pt;}
         .instr-timing{color:#000;font-weight:700;font-size:9.6pt;margin-top:.5mm;}
         .instr-warning{color:#000;font-weight:700;font-size:9pt;margin-top:.3mm;text-decoration:underline;}
-
         .pdf-footer{flex-shrink:0;margin-top:3mm;padding-top:2.5mm;border-top:1.5px solid #000;direction:ltr;display:flex;justify-content:space-between;align-items:flex-end;}
         .pdf-sig-block{text-align:left;}
         .pdf-sig-label{font-size:11pt;font-weight:800;color:#000;direction:rtl;display:inline-block;}
@@ -91,12 +100,40 @@
         .modal-overlay.modal-active{display:flex;}
         .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);}
         .modal-content{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.2);}
-        @media(max-width:640px){.med-grid{grid-template-columns:1fr!important;}.modal-content{max-height:90vh;}}
+        @media(max-width:640px){.med-grid{grid-template-columns:1fr!important;}.modal-content{max-height:90vh;}.login-card{padding:32px 24px;}}
         @media print{body *{display:none!important;}}
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
     </style>
 </head>
 <body>
+    <!-- ===== LOGIN OVERLAY ===== -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-bg"></div>
+        <div class="login-card anim-fade-up">
+            <div class="text-center mb-10">
+                <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#DAA520] to-[#B8860B] flex items-center justify-center shadow-lg" style="animation:loginPulse 3s ease infinite;">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                </div>
+                <h1 class="text-2xl font-bold text-white font-display mb-1">Clinical Pharmacy</h1>
+                <p class="text-sm text-white/50 font-arabic">أداة تثقيف المريض الدوائي</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-white/60 mb-2 font-arabic mr-1">اسم المستخدم</label>
+                    <input type="text" id="loginUser" class="login-input" placeholder="pharmacist" dir="ltr" style="text-align:left;">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-white/60 mb-2 font-arabic mr-1">كلمة المرور</label>
+                    <input type="password" id="loginPass" class="login-input" placeholder="•••••••••" dir="ltr" style="text-align:left;">
+                </div>
+                <div id="loginError" class="login-error"></div>
+                <div id="loginLoader" class="login-loader hidden">جاري التحقق...</div>
+                <button id="loginBtn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#DAA520] to-[#B8860B] text-white font-bold text-base hover:shadow-lg hover:shadow-yellow-900/20 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 font-arabic">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
     <div id="mainApp" style="position:relative;z-index:1;">
         <header class="sticky top-0 z-50 border-b border-[var(--border)]" style="background:rgba(250,248,243,.92);backdrop-filter:blur(16px);">
             <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -104,13 +141,20 @@
                     <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-mid)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/20">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                     </div>
-                    <div><h1 class="text-lg md:text-xl font-bold text-[var(--fg)] font-display tracking-tight">Medication Counseling</h1><p class="text-xs text-[var(--muted)] font-arabic">أداة تثقيف المريض الدوائي</p></div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold text-[var(--fg)] font-display tracking-tight">Medication Counseling</h1>
+                        <p class="text-xs text-[var(--muted)] font-arabic">أداة تثقيف المريض الدوائي</p>
+                    </div>
                 </div>
                 <div class="flex items-center gap-3">
+                    <div id="wardBadge" class="ward-badge hidden" style="background:rgba(20,83,45,.1);color:var(--accent);border:1px solid rgba(20,83,45,.15);"></div>
                     <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-xs font-semibold text-[var(--muted)]">متصل</span></div>
                     <button id="darkToggle" class="w-10 h-10 rounded-xl border border-[var(--border)] flex items-center justify-center hover:border-[var(--accent)] transition-all" style="background:var(--surface);" aria-label="تبديل الوضع الليلي">
                         <svg id="iconMoon" class="w-5 h-5 text-[var(--fg)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                         <svg id="iconSun" class="w-5 h-5 text-[var(--fg)] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </button>
+                    <button id="logoutBtn" class="w-10 h-10 rounded-xl border border-[var(--border)] flex items-center justify-center hover:border-[var(--danger)] transition-all" style="background:var(--surface);" title="تسجيل الخروج" aria-label="تسجيل الخروج">
+                        <svg class="w-5 h-5 text-[var(--danger)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1m-3 9a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2v10a2 2 0 01-2 2h.01M17 3a2.83 2.83 0 001-4 0L8 9m9 0a2.83 2.83 0 004 0M8 9H5.01"/></svg>
                     </button>
                     <div id="counterBadge" class="hidden px-3 py-1.5 rounded-full text-xs font-bold" style="background:rgba(20,83,45,.1);color:var(--accent);border:1px solid rgba(20,83,45,.15);"><span id="counterText">0</span></div>
                 </div>
@@ -143,10 +187,7 @@
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">طريقة الإعطاء</label><select id="selMethod" class="w-full px-4 py-3 rounded-xl"><option value="after">بعد الطعام</option><option value="before">قبل الطعام</option></select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">ملاحظات تحذيرية</label><select id="selWarning" class="w-full px-4 py-3 rounded-xl"><option value="">بدون</option><option value="milk">لا تؤخذ مع الحليب</option><option value="drowsy">تسبب النعاس</option><option value="water">اشرب كميات كافية من الماء</option><option value="crush">لا تسحق القرص</option></select></div>
                     </div>
-                    <div id="previewBox" class="instruction-preview hidden">
-                        <div class="flex items-start gap-2"><svg class="w-5 h-5 mt-0.5 flex-shrink-0" style="color:var(--accent);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <div><p class="text-xs font-bold mb-1" style="color:var(--accent);">معاينة التعليمات:</p><p id="previewText" class="font-arabic font-bold text-base leading-relaxed" style="color:var(--fg);">—</p><p id="previewTiming" class="hidden font-arabic text-sm font-semibold mt-1" style="color:var(--gold);"></p><p id="previewWarning" class="hidden font-arabic text-sm font-bold mt-1" style="color:var(--danger);"></p></div></div>
-                    </div>
+                    <div id="previewBox" class="instruction-preview hidden"><div class="flex items-start gap-2"><svg class="w-5 h-5 mt-0.5 flex-shrink-0" style="color:var(--accent);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><p class="text-xs font-bold mb-1" style="color:var(--accent);">معاينة التعليمات:</p><p id="previewText" class="font-arabic font-bold text-base leading-relaxed" style="color:var(--fg);">—</p><p id="previewTiming" class="hidden font-arabic text-sm font-semibold mt-1" style="color:var(--gold);"></p><p id="previewWarning" class="hidden font-arabic text-sm font-bold mt-1" style="color:var(--danger);"></p></div></div></div>
                     <button id="btnAddMed" class="btn-primary w-full py-3.5 rounded-xl font-bold text-base flex items-center justify-center gap-2 font-arabic" disabled><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>إضافة الدواء للقائمة</button>
                 </div>
             </section>
@@ -159,36 +200,25 @@
                 </div>
             </section>
             <section class="space-y-4 anim-fade-up" style="animation-delay:.2s;">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <h2 class="text-xl font-bold text-[var(--fg)] font-display">Patient Queue</h2>
-                    <div class="flex items-center gap-2 flex-wrap"><div class="relative"><svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="filterRoom" class="pr-9 pl-4 py-2 rounded-xl text-sm w-40" placeholder="فلتر بالغرفة..." dir="ltr" style="text-align:left;"></div></div>
-                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3"><h2 class="text-xl font-bold text-[var(--fg)] font-display">Patient Queue</h2><div class="flex items-center gap-2 flex-wrap"><div class="relative"><svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="filterRoom" class="pr-9 pl-4 py-2 rounded-xl text-sm w-40" placeholder="فلتر بالغرفة..." dir="ltr" style="text-align:left;"></div></div></div>
                 <div class="flex gap-2 flex-wrap">
                     <button id="btnOpenPrintModal" class="btn-primary px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 font-arabic"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>طباعة (اختيار ذكي)</button>
                     <button id="btnClearQueue" class="px-5 py-2.5 rounded-xl border text-sm font-medium flex items-center gap-2 transition-colors hover:bg-red-50" style="border-color:rgba(153,27,27,.2);color:var(--danger);"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>مسح الطابور</button>
                 </div>
                 <div id="queueGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-                <div id="emptyState" class="text-center py-16 card"><div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background:var(--surface);"><svg class="w-10 h-10 text-[var(--muted)]" style="opacity:.3;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><p class="text-[var(--muted)] font-semibold font-arabic">لا يوجد مرضى في الطابور</p><p class="text-[var(--muted)] text-sm mt-1 opacity-60 font-arabic">أضف بيانات المريض أعلاه للبدء</p></div>
+                <div id="emptyState" class="text-center py-16 card"><div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background:var(--surface);"><svg class="w-10 h-10 text-[var(--muted)]" style="opacity:.3;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><p class="text-[var(--muted)] font-semibold font-arabic">لا يوجد مرضى في الطابور</p><p class="text-[var(--muted)] text-sm mt-1 opacity-.6 font-arabic">أضف بيانات المريض أعلاه للبدء</p></div>
             </section>
         </main>
     </div>
 
+    <!-- Print Modal -->
     <div id="printModal" class="modal-overlay">
         <div class="modal-backdrop" onclick="window._closePrintModal()"></div>
         <div class="modal-content anim-modal">
-            <div class="px-6 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,var(--accent),var(--accent-mid));">
-                <h2 class="text-lg text-white font-bold font-arabic">اختيار المرضى للطباعة</h2>
-                <button onclick="window._closePrintModal()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-            </div>
-            <div class="p-4 space-y-3" style="border-bottom:1px solid var(--border);">
-                <div class="relative"><svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="modalSearch" inputmode="numeric" class="w-full pr-9 pl-4 py-3 rounded-xl text-base" placeholder="بحث بالغرفة (٥ أو 5)..." dir="ltr" style="text-align:left;"></div>
-                <label class="flex items-center gap-2 cursor-pointer text-sm font-semibold text-[var(--fg)] px-1"><input type="checkbox" id="modalSelAll" class="w-4 h-4 rounded accent-[var(--accent)]">تحديد الكل</label>
-            </div>
+            <div class="px-6 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,var(--accent),var(--accent-mid));"><h2 class="text-lg text-white font-bold font-arabic">اختيار المرضى للطباعة</h2><button onclick="window._closePrintModal()" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+            <div class="p-4 space-y-3" style="border-bottom:1px solid var(--border);"><div class="relative"><svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="modalSearch" inputmode="numeric" class="w-full pr-9 pl-4 py-3 rounded-xl text-base" placeholder="بحث بالغرفة (٥ أو 5)..." dir="ltr" style="text-align:left;"></div><label class="flex items-center gap-2 cursor-pointer text-sm font-semibold text-[var(--fg)] px-1"><input type="checkbox" id="modalSelAll" class="w-4 h-4 rounded accent-[var(--accent)]">تحديد الكل</label></div>
             <div id="modalPatientList" class="flex-1 overflow-y-auto p-4 space-y-2" style="min-height:120px;max-height:400px;"></div>
-            <div class="p-4" style="border-top:1px solid var(--border);background:var(--surface);">
-                <div class="flex items-center justify-between mb-3"><span class="text-sm font-semibold text-[var(--muted)] font-arabic">المحدد: <span id="modalSelCount" class="text-[var(--accent)] font-bold">0</span></span></div>
-                <button id="btnModalPrint" disabled class="btn-primary w-full py-3.5 rounded-xl font-bold text-base flex items-center justify-center gap-2 font-arabic"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>إنشاء PDF</button>
-            </div>
+            <div class="p-4" style="border-top:1px solid var(--border);background:var(--surface);"><div class="flex items-center justify-between mb-3"><span class="text-sm font-semibold text-[var(--muted)] font-arabic">المحدد: <span id="modalSelCount" class="text-[var(--accent)] font-bold">0</span></span></div><button id="btnModalPrint" disabled class="btn-primary w-full py-3.5 rounded-xl font-bold text-base flex items-center justify-center gap-2 font-arabic"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>إنشاء PDF</button></div>
         </div>
     </div>
 
@@ -196,10 +226,12 @@
     <div id="toast"><span id="toastMsg"></span></div>
 
     <script type="module">
-        const firebaseConfig={apiKey:"AIzaSyC7YTMXvKlyhnbi9o78ckHUZjTd_bubdyw",authDomain:"tablets-1e580.firebaseapp.com",projectId:"tablets-1e580",storageBucket:"tablets-1e580.firebasestorage.app",messagingSenderId:"395107443158",appId:"1:395107443158:web:2ab063e4b65693dc108477",measurementId:"G-F483C9RKCJ"};
+        const firebaseConfig={apiKey:"AIzaSyAaMqxvBAuTkOykYHF5w_xjS98bDOhZoPY",authDomain:"documentation2-dd1aa.firebaseapp.com",projectId:"documentation2-dd1aa",storageBucket:"documentation2-dd1aa.firebasestorage.app",messagingSenderId:"236681783643",appId:"1:236681783643:web:dc4d715258955b3413d27e",measurementId:"G-WRK2C3121X"};
         import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import{getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,onSnapshot,query,orderBy}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        const app=initializeApp(firebaseConfig),db=getFirestore(app),patientsRef=collection(db,"counseling_patients");
+        import{getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,getDocs,query,where,onSnapshot,orderBy}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        const app=initializeApp(firebaseConfig),db=getFirestore(app);
+        const usersRef=collection(db,"users_config");
+        const patientsRef=collection(db,"counseling_patients");
 
         const DRUG_DB={cardiac:[{name:'Aspirin',defaultDose:'75mg'},{name:'Plavix (Clopidogrel)',defaultDose:'75mg'},{name:'Atorvastatin',defaultDose:'20mg'},{name:'Bisoprolol',defaultDose:'5mg'}],antibiotics:[{name:'Amoxicillin',defaultDose:'500mg'},{name:'Augmentin',defaultDose:'625mg'},{name:'Azithromycin',defaultDose:'500mg'}],others:[]};
         const PILLS_ARABIC={1:'حبة واحدة',2:'حبتين',3:'ثلاث حبات',4:'أربع حبات',5:'خمس حبات'};
@@ -208,6 +240,8 @@
         const WARNING_ARABIC={milk:'لا تؤخذ مع الحليب',drowsy:'تسبب النعاس',water:'اشرب كميات كافية من الماء',crush:'لا تسحق القرص'};
 
         let patients=[],currentMeds=[],modalSelectedIds=new Set(),editingPatientId=null;
+        // جلسة المستخدم: { username, wardId, wardName }
+        let currentUser=null;
         const $=id=>document.getElementById(id);
         const AR='٠١٢٣٤٥٦٧٨٩',EN='0123456789';
 
@@ -218,34 +252,163 @@
         function showToast(msg,type='success'){const c={success:'background:#14532D;color:white;',error:'background:#991B1B;color:white;',info:'background:#1C1917;color:white;'};const t=$('toast');$('toastMsg').textContent=msg;t.style.cssText+=c[type]||c.info;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
         function setConnection(o){$('connDot').classList.toggle('offline',!o);$('connText').textContent=o?'متصل':'غير متصل';}
 
+        // =============================================
+        // LOGIN SYSTEM
+        // =============================================
         function initDarkMode(){const d=localStorage.getItem('counseling_theme')==='dark';document.body.classList.toggle('dark-mode',d);$('iconMoon').classList.toggle('hidden',d);$('iconSun').classList.toggle('hidden',!d);}
         $('darkToggle').addEventListener('click',()=>{const d=document.body.classList.toggle('dark-mode');localStorage.setItem('counseling_theme',d?'dark':'light');$('iconMoon').classList.toggle('hidden',d);$('iconSun').classList.toggle('hidden',!d);});
 
+        async function attemptLogin(){
+            const user=$('loginUser').value.trim();
+            const pass=$('loginPass').value.trim();
+            if(!user||!pass){$('loginError').textContent='أدخل اسم المستخدم وكلمة المرور';return;}
+            $('loginError').classList.remove('hidden');$('loginLoader').classList.remove('hidden');$('loginBtn').disabled=true;
+
+            try{
+                // البحث عن المستخدم في مجموعة users_config
+                const q=query(usersRef,where("username","==",user),where("password","==",pass));
+                const snapshot=await getDocs(q);
+
+                if(snapshot.empty){
+                    $('loginError').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
+                    $('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
+                    return;
+                }
+
+                const userDoc=snapshot.docs[0].data();
+                currentUser={
+                    username:user,
+                    wardId:userDoc.wardId||'',
+                    wardName:userDoc.wardName||''
+                };
+
+                // حفظ الجلسة
+                sessionStorage.setItem('counseling_session',JSON.stringify(currentUser));
+
+                // إظهار التطبيق
+                $('loginOverlay').classList.remove('login-active');
+                showWardBadge();
+                startApp();
+                showToast('مرحباً '+currentUser.wardName);
+            }catch(err){
+                console.error('Login error:',err);
+                $('loginError').textContent='خطأ في الاتصال. تأكد من الإنترنت.';
+                $('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
+            }
+        }
+
+        function logout(){
+            sessionStorage.removeItem('counseling_session');
+            currentUser=null;
+            $('loginOverlay').classList.add('login-active');
+            $('loginUser').value='';$('loginPass').value='';
+            $('loginError').classList.add('hidden');$('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
+            $('mainApp').style.display='none';
+            $('wardBadge').classList.add('hidden');
+            // إيقاف المستمع إذا كان يعمل
+            if(window._unsubscribeListener){window._unsubscribeListener();}
+        }
+
+        function showWardBadge(){
+            if(currentUser&&currentUser.wardName){
+                $('wardBadge').textContent=currentUser.wardName;
+                $('wardBadge').classList.remove('hidden');
+            }else{$('wardBadge').classList.add('hidden');}
+        }
+
+        $('loginBtn').addEventListener('click',attemptLogin);
+        $('loginUser').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
+        $('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')attemptLogin();});
+        $('logoutBtn').addEventListener('click',logout);
+
+        // التحقق من جلسة سابقة عند التحميل
+        const savedSession=sessionStorage.getItem('counseling_session');
+        if(savedSession){
+            try{currentUser=JSON.parse(savedSession);showWardBadge();startApp();}
+            catch(e){sessionStorage.removeItem('counseling_session');}
+        }else{
+            $('mainApp').style.display='none';
+        }
+
+        // =============================================
+        // DRUG DROPDOWN LOGIC
+        // =============================================
         function updateDrugDropdown(){const c=$('selCategory').value,s=$('selDrug'),u=$('inpCustomDrug');s.innerHTML='';u.classList.add('hidden');s.disabled=true;if(!c){s.innerHTML='<option value="">-- اختر التصنيف أولاً --</option>';return;}s.disabled=false;if(c==='others'){u.classList.remove('hidden');s.innerHTML='<option value="custom">إدخال يدوي</option>';return;}const d=DRUG_DB[c]||[];s.innerHTML='<option value="">-- اختر الدواء --</option>'+d.map(x=>`<option value="${x.name}" data-dose="${x.defaultDose}">${x.name}</option>`).join('');}
         function onDrugSelected(){const v=$('selDrug').value;if(v&&v!=='custom')$('inpDose').value=$('selDrug').selectedOptions[0].dataset.dose||'';else if(v!=='custom')$('inpDose').value='';updatePreview();}
         function updatePreview(){const p=parseInt($('selPills').value)||1,m=$('selMethod').value,f=parseInt($('selFreq').value)||1,w=$('selWarning').value,t=$('selTiming').value;$('previewText').textContent=generateArabicInstruction(p,m,f);$('previewBox').classList.remove('hidden');if(t){$('previewTiming').textContent='الوقت: '+t;$('previewTiming').classList.remove('hidden');}else $('previewTiming').classList.add('hidden');if(w&&WARNING_ARABIC[w]){$('previewWarning').textContent='تنبيه: '+WARNING_ARABIC[w];$('previewWarning').classList.remove('hidden');}else $('previewWarning').classList.add('hidden');const c=$('selCategory').value,dv=$('selDrug').value,cn=c==='others'?$('inpCustomDrug').value.trim():'';$('btnAddMed').disabled=!(c&&((dv&&dv!=='custom')||(dv==='custom'&&cn))&&$('inpDose').value.trim());}
 
+        // =============================================
+        // ADD / REMOVE MEDICATION
+        // =============================================
         function addMedication(){const c=$('selCategory').value,dv=$('selDrug').value;let dn=dv==='custom'?$('inpCustomDrug').value.trim():dv;const dose=$('inpDose').value.trim(),pills=parseInt($('selPills').value)||1,freq=parseInt($('selFreq').value)||1,timing=$('selTiming').value,method=$('selMethod').value,warning=$('selWarning').value;if(!dn||!dose){showToast('أكمل بيانات الدواء','error');return;}if(currentMeds.some(x=>x.drugName.toLowerCase()===dn.toLowerCase())){showToast('هذا الدواء مضاف مسبقاً','error');return;}currentMeds.push({id:generateId(),category:c,drugName:dn,dose,pills,freq,timing,method,warning,instruction:generateArabicInstruction(pills,method,freq),warningText:warning?WARNING_ARABIC[warning]:''});renderMedsList();showToast('تمت إضافة الدواء');$('selDrug').value=c==='others'?'custom':'';$('inpDose').value='';if(c==='others')$('inpCustomDrug').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;}
         function removeMed(i){currentMeds.splice(i,1);renderMedsList();}
         window._removeMed=removeMed;
 
         function renderMedsList(){const s=$('currentMedsSection'),l=$('medsList');if(!currentMeds.length){s.classList.add('hidden');return;}s.classList.remove('hidden');$('medCount').textContent=currentMeds.length;l.innerHTML=currentMeds.map((m,i)=>`<div class="anim-slide-right flex items-start justify-between gap-3 p-3 rounded-xl" style="background:var(--surface);border:1px solid var(--border);animation-delay:${i*.05}s;"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="font-bold text-[var(--fg)] text-sm">${m.drugName}</span><span class="px-2 py-0.5 rounded-full text-xs font-semibold" style="background:rgba(20,83,45,.08);color:var(--accent);">${m.dose} X ${m.freq}</span>${m.timing?`<span class="text-xs font-semibold" style="color:var(--gold);">${m.timing}</span>`:''}</div><p class="font-arabic text-sm font-bold mt-1" style="color:var(--fg);">${m.instruction}</p>${m.warningText?`<p class="font-arabic text-xs font-bold mt-0.5" style="color:var(--danger);">${m.warningText}</p>`:''}</div><button onclick="window._removeMed(${i})" class="p-1.5 rounded-lg hover:bg-red-50 transition-colors flex-shrink-0 mt-0.5" style="color:var(--danger);"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div>`).join('');}
 
+        // =============================================
+        // EDIT MODE
+        // =============================================
         function enterEditMode(id){const p=patients.find(x=>x.id===id);if(!p)return;editingPatientId=id;$('inpName').value=p.name;$('inpRoom').value=p.room;$('inpBed').value=p.bed;currentMeds=[...p.meds];renderMedsList();$('btnSaveText').textContent='تحديث بيانات المريض';$('btnSave').classList.remove('btn-gold');$('btnSave').classList.add('btn-update');$('btnCancelEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});}
         window._editPatient=enterEditMode;
         function exitEditMode(){editingPatientId=null;$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();$('btnSaveText').textContent='حفظ المريض في الطابور';$('btnSave').classList.add('btn-gold');$('btnSave').classList.remove('btn-update');$('btnCancelEdit').classList.add('hidden');}
         $('btnCancelEdit').addEventListener('click',exitEditMode);
 
-        async function saveOrUpdatePatient(){const name=$('inpName').value.trim(),room=$('inpRoom').value.trim(),bed=$('inpBed').value.trim();if(!name||!room||!bed){showToast('أكمل بيانات المريض','error');return;}if(!currentMeds.length){showToast('أضف دواء واحد على الأقل','error');return;}const data={name,room,bed,meds:[...currentMeds]};if(editingPatientId){showToast('جاري التحديث...','info');try{await updateDoc(doc(db,"counseling_patients",editingPatientId),data);exitEditMode();showToast('تم تحديث بيانات المريض بنجاح');}catch(e){showToast('فشل التحديث','error');}}else{data.saveDate=new Date().toISOString();showToast('جاري الحفظ...','info');try{await addDoc(patientsRef,data);$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();showToast('تم حفظ المريض بنجاح');}catch(e){showToast('فشل الحفظ','error');}}}
+        // =============================================
+        // SAVE / UPDATE PATIENT (مع wardId تلقائي)
+        // =============================================
+        async function saveOrUpdatePatient(){
+            const name=$('inpName').value.trim(),room=$('inpRoom').value.trim(),bed=$('inpBed').value.trim();
+            if(!name||!room||!bed){showToast('أكمل بيانات المريض','error');return;}
+            if(!currentMeds.length){showToast('أدخل دواء واحد على الأقل','error');return;}
+            // إرفاق wardId تلقائياً من الجلسة الحالية
+            const data={name,room,bed,meds:[...currentMeds],wardId:currentUser?currentUser.wardId:'',saveDate:new Date().toISOString()};
+            if(editingPatientId){showToast('جاري التحديث...','info');try{await updateDoc(doc(db,"counseling_patients",editingPatientId),data);exitEditMode();showToast('تم التحديث بنجاح');}catch(e){showToast('فشل التحديث','error');}}
+            else{showToast('جاري الحفظ...','info');try{await addDoc(patientsRef,data);$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();showToast('تم الحفظ بنجاح');}catch(e){showToast('فشل الحفظ','error');}}
+        }
 
-        function startListener(){onSnapshot(query(patientsRef,orderBy("saveDate","desc")),(s)=>{setConnection(true);patients=s.docs.map(d=>({id:d.id,...d.data()}));renderQueue();},(e)=>{setConnection(false);showToast('فقد الاتصال','error');});}
-        async function deletePatient(id){const b=patients.find(p=>p.id===id);if(editingPatientId===id)exitEditMode();patients=patients.filter(p=>p.id!==id);renderQueue();try{await deleteDoc(doc(db,"counseling_patients",id));}catch(e){patients.unshift(b);renderQueue();showToast('فشل الحذف','error');}}
+        // =============================================
+        // FIRESTORE — عزل البيانات حسب الجناح
+        // =============================================
+        let unsubscribeFn=null;
 
-        function renderQueue(){const f=toEnglishNums($('filterRoom').value.trim().toLowerCase());const filtered=f?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(f)):patients;const g=$('queueGrid'),e=$('emptyState');if(!filtered.length){g.innerHTML='';e.classList.remove('hidden');}else{e.classList.add('hidden');g.innerHTML=filtered.map(p=>{const ds=new Date(p.saveDate).toLocaleDateString('ar-IQ',{year:'numeric',month:'short',day:'numeric'});const ie=editingPatientId===p.id;return`<div class="patient-card card overflow-hidden ${ie?'ring-2 ring-purple-500':''}"><div class="p-4 flex items-center justify-between" style="background:var(--surface);border-bottom:1px solid var(--border);"><div class="flex items-center gap-3"><div class="w-2 h-8 rounded-full ${ie?'bg-purple-500':'bg-[var(--accent)]'}"></div><div><h3 class="font-bold text-[var(--fg)] font-arabic text-sm">${p.name}</h3><p class="text-xs text-[var(--muted)]">غرفة ${normalizeDigits(p.room)} • سرير ${normalizeDigits(p.bed)} • ${ds}</p></div></div><div class="flex gap-1"><button onclick="window._editPatient('${p.id}')" class="p-2 rounded-lg hover:bg-purple-50 transition-colors" style="color:#6D28D9;" title="تعديل"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button><button onclick="window._deletePatient('${p.id}')" class="p-2 rounded-lg hover:bg-red-50 transition-colors" style="color:var(--danger);" title="حذف"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></div><div class="p-4 space-y-2">${p.meds.map(m=>`<div class="flex items-start justify-between gap-2 text-xs border-b border-dashed last:border-0 pb-2" style="border-color:var(--border);"><div class="min-w-0"><span class="font-bold text-[var(--fg)]">${m.drugName}</span><span class="font-semibold" style="color:var(--accent);"> ${m.dose} X ${m.freq}</span>${m.timing?`<span class="font-semibold" style="color:var(--gold);"> • ${m.timing}</span>`:''}</div><div class="text-left flex-shrink-0 font-arabic text-[10px] leading-relaxed" style="color:var(--muted);max-width:140px;">${m.instruction}</div></div>`).join('')}</div></div>`;}).join('');}updateCounter();}
+        function startApp(){
+            $('mainApp').style.display='';
+            if(unsubscribeFn)unsubscribeFn();
+
+            // إنشاء الاستعلام المفلتر حسب wardId
+            const wardId=currentUser?currentUser.wardId:'__none__';
+            let q=query(patientsRef,orderBy("saveDate","desc"));
+            if(wardId){q=query(patientsRef,where("wardId","==",wardId),orderBy("saveDate","desc"));}
+
+            unsubscribeFn=onSnapshot(q,
+                (snapshot)=>{setConnection(true);patients=snapshot.docs.map(d=>({id:d.id,...d.data()}));renderQueue();},
+                (err)=>{setConnection(false);showToast('فقد الاتصال','error');}
+            );
+        }
+
+        async function deletePatient(id){
+            const b=patients.find(p=>p.id===id);if(editingPatientId===id)exitEditMode();
+            patients=patients.filter(p=>p.id!==id);renderQueue();
+            try{await deleteDoc(doc(db,"counseling_patients",id));}
+            catch(e){patients.unshift(b);renderQueue();showToast('فشل الحذف','error');}
+        }
+
+        // =============================================
+        // RENDER QUEUE
+        // =============================================
+        function renderQueue(){
+            const f=toEnglishNums($('filterRoom').value.trim().toLowerCase());
+            const filtered=f?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(f)):patients;
+            const g=$('queueGrid'),e=$('emptyState');
+            if(!filtered.length){g.innerHTML='';e.classList.remove('hidden');}
+            else{e.classList.add('hidden');g.innerHTML=filtered.map(p=>{const ds=new Date(p.saveDate).toLocaleDateString('ar-IQ',{year:'numeric',month:'short',day:'numeric'});const ie=editingPatientId===p.id;return`<div class="patient-card card overflow-hidden ${ie?'ring-2 ring-purple-500':''}"><div class="p-4 flex items-center justify-between" style="background:var(--surface);border-bottom:1px solid var(--border);"><div class="flex items-center gap-3"><div class="w-2 h-8 rounded-full ${ie?'bg-purple-500':'bg-[var(--accent)]'}"></div><div><h3 class="font-bold text-[var(--fg)] font-arabic text-sm">${p.name}</h3><p class="text-xs text-[var(--muted)]">غرفة ${normalizeDigits(p.room)} • سرير ${normalizeDigits(p.bed)} • ${ds}</p></div></div><div class="flex gap-1"><button onclick="window._editPatient('${p.id}')" class="p-2 rounded-lg hover:bg-purple-50 transition-colors" style="color:#6D28D9;" title="تعديل"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button><button onclick="window._deletePatient('${p.id}')" class="p-2 rounded-lg hover:bg-red-50 transition-colors" style="color:var(--danger);" title="حذف"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></div><div class="p-4 space-y-2">${p.meds.map(m=>`<div class="flex items-start justify-between gap-2 text-xs border-b border-dashed last:border-0 pb-2" style="border-color:var(--border);"><div class="min-w-0"><span class="font-bold text-[var(--fg)]">${m.drugName}</span><span class="font-semibold" style="color:var(--accent);"> ${m.dose} X ${m.freq}</span>${m.timing?`<span class="font-semibold" style="color:var(--gold);"> • ${m.timing}</span>`:''}</div><div class="text-left flex-shrink-0 font-arabic text-[10px] leading-relaxed" style="color:var(--muted);max-width:140px;">${m.instruction}</div></div>`).join('')}</div></div>`;}).join('');}
+            updateCounter();
+        }
         function updateCounter(){const t=patients.length;$('counterText').textContent=`${t} مريض`;$('counterBadge').classList.toggle('hidden',!t);$('emptyState').classList.toggle('hidden',t>0);}
 
         // =============================================
-        // Print Modal — Sorted by Room (Asc)
+        // PRINT MODAL — مرتب حسب الغرفة تصاعدياً
         // =============================================
         function openPrintModal(){if(!patients.length){showToast('لا يوجد مرضى','error');return;}modalSelectedIds.clear();$('modalSearch').value='';$('modalSelAll').checked=false;renderModalList();$('printModal').classList.add('modal-active');}
         function closePrintModal(){$('printModal').classList.remove('modal-active');}
@@ -255,12 +418,8 @@
             const raw=$('modalSearch').value.trim();
             const en=toEnglishNums(raw.toLowerCase());
             let filtered=raw?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(en)||p.name.toLowerCase().includes(en)):[...patients];
-            // ترتيب تصاعدي حسب رقم الغرفة مع معالجة الأرقام العربية
-            filtered.sort((a,b)=>{
-                const ra=parseInt(toEnglishNums(a.room))||0;
-                const rb=parseInt(toEnglishNums(b.room))||0;
-                return ra-rb;
-            });
+            // ترتيب تصاعدي حسب رقم الغرفة مع معالجة الأرقام العربية والإنجليزية
+            filtered.sort((a,b)=>{const ra=parseInt(toEnglishNums(a.room))||0;const rb=parseInt(toEnglishNums(b.room))||0;return ra-rb;});
             const list=$('modalPatientList');
             if(!filtered.length){list.innerHTML=`<div class="text-center py-8"><p class="text-[var(--muted)] font-arabic text-sm">لا توجد نتائج</p></div>`;}
             else{list.innerHTML=filtered.map(p=>{const ck=modalSelectedIds.has(p.id)?'checked':'';return`<label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors hover:bg-[var(--surface)]" style="border:1px solid var(--border);"><input type="checkbox" ${ck} onchange="window._toggleModalSelect('${p.id}')" class="w-4 h-4 rounded flex-shrink-0 accent-[var(--accent)]"><div class="flex-1 min-w-0"><p class="font-bold text-[var(--fg)] text-sm font-arabic">${p.name}</p><p class="text-xs text-[var(--muted)]">غرفة <span class="font-semibold">${normalizeDigits(p.room)}</span> • سرير ${normalizeDigits(p.bed)} • ${p.meds.length} أدوية</p></div><span class="px-2 py-1 rounded-lg text-xs font-bold flex-shrink-0" style="background:rgba(20,83,45,.08);color:var(--accent);">${normalizeDigits(p.room)}</span></label>`;}).join('');}
@@ -270,25 +429,15 @@
         window._toggleModalSelect=(id)=>{if(modalSelectedIds.has(id))modalSelectedIds.delete(id);else modalSelectedIds.add(id);updateModalCount();renderModalList();};
 
         // =============================================
-        // PDF — B&W Optimized, Larger Fonts
+        // PDF — B&W، خطوط أكبر، 9 صفوف
         // =============================================
         const ROWS_PER_PAGE=9;
-
         function buildPDFPage(patient,pageMeds,emptyCount,displayName,isLastPage){
             const printDate=new Date().toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'});
             let h=`<div class="pdf-title">ورقة استشارة دوائية للمريض</div><div class="pdf-subtitle">Patient Medication Counseling Sheet</div>
-            <div class="pdf-info-row">
-                <div class="pdf-info-item"><span class="pdf-info-label">اسم المريض:</span><span class="pdf-info-value">${displayName}</span></div>
-                <div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${patient.room}</span></div>
-                <div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${patient.bed}</span></div>
-                <div class="pdf-info-item"><span class="pdf-info-label">التاريخ:</span><span class="pdf-info-value">${printDate}</span></div>
-            </div>
-            <div class="pdf-table-wrap">
-                <div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div>
-                <div class="pdf-tbody">`;
-            for(const m of pageMeds){
-                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;
-            }
+            <div class="pdf-info-row"><div class="pdf-info-item"><span class="pdf-info-label">اسم المريض:</span><span class="pdf-info-value">${displayName}</span></div><div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${patient.room}</span></div><div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${patient.bed}</span></div><div class="pdf-info-item"><span class="pdf-info-label">التاريخ:</span><span class="pdf-info-value">${printDate}</span></div></div>
+            <div class="pdf-table-wrap"><div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div><div class="pdf-tbody">`;
+            for(const m of pageMeds){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;}
             for(let i=0;i<emptyCount;i++){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name"></div><div class="pdf-cell cell-dose"></div><div class="pdf-cell cell-instr"></div></div>`;}
             h+=`</div></div>`;
             if(isLastPage){h+=`<div class="pdf-footer"><div class="pdf-sig-block"><div class="pdf-sig-label">توقيع الصيدلاني السريري</div><div class="pdf-sig-line"></div></div><div class="pdf-watermark">Clinical Pharmacy Counseling Tool</div></div>`;}
@@ -317,6 +466,9 @@
 
         window._deletePatient=(id)=>deletePatient(id);
 
+        // =============================================
+        // EVENT LISTENERS
+        // =============================================
         $('selCategory').addEventListener('change',updateDrugDropdown);
         $('selDrug').addEventListener('change',onDrugSelected);
         $('inpCustomDrug').addEventListener('input',updatePreview);
@@ -337,7 +489,7 @@
         $('btnModalPrint').addEventListener('click',async()=>{await generatePDF(patients.filter(p=>modalSelectedIds.has(p.id)));closePrintModal();});
         document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&$('printModal').classList.contains('modal-active'))closePrintModal();});
 
-        initDarkMode();updateDrugDropdown();startListener();
+        initDarkMode();updateDrugDropdown();
     </script>
 </body>
 </html>

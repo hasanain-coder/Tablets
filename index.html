@@ -247,7 +247,10 @@
         const usersRef=collection(db,"users_config");
         const patientsRef=collection(db,"counseling_patients");
 
-        const DRUG_DB={cardiac:[{name:'اسبرين',defaultDose:'100mg'},{name:'بلافكس',defaultDose:'75mg'},{name:'افاس',defaultDose:'20mg'},{name:'كونكور',defaultDose:'5mg'},{name:'كرستور',defaultDose:'20mg'},{name:'الداكتون',defaultDose:'25mg'},{name:'تورسميد',defaultDose:'10mg'},{name:'املودبين',defaultDose:'5mg'},{name:'كابوتين',defaultDose:'25mg'},{name:'لزنوبريل',defaultDose:'10mg'},{name:'كارفدول',defaultDose:'6.25mg'}],antibiotics:[{name:'ازثرومايسين',defaultDose:'500mg'},{name:'ليفوفلوكساسين',defaultDose:'500mg'},{name:'مثبريم',defaultDose:'480mg'}],others:[]};
+        const DRUG_DB={cardiac:[{name:'اسبرين',defaultDose:'100mg'},{name:'بلافكس',defaultDose:'75mg'},{name:'افاس',defaultDose:'20mg'},{name:'كونكور',defaultDose:'5mg'},{name:'كرستور',defaultDose:'20mg'},{name:'الداكتون',defaultDose:'25mg'},{name:'تورسميد',defaultDose:'10mg'},{name:'املودبين',defaultDose:'5mg'},{name:'كابوتين',defaultDose:'25mg'},{name:'لزنوبريل',defaultDose:'10mg'},{name:'كارفدول',defaultDose:'6.25mg'}],
+            antibiotics:[{name:'ازثرومايسين',defaultDose:'500mg'},{name:'ليفوفلوكساسين',defaultDose:'500mg'},{name:'مثبريم',defaultDose:'480mg'}],
+            miscellaneous:[{name:'برزلون',defaultDose:'5mg'}],
+            others:[]};
         const PILLS_ARABIC={1:'حبة واحدة',2:'حبتين',3:'ثلاث حبات',4:'أربع حبات',5:'خمس حبات'};
         const FREQ_ARABIC={1:'مرة واحدة',2:'مرتين',3:'ثلاث مرات',4:'أربع مرات'};
         const METHOD_ARABIC={before:'قبل الطعام',after:'بعد الطعام'};

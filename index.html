@@ -46,7 +46,10 @@
         .live-dot.offline{background:#EF4444;animation:none;}
         .instruction-preview{background:linear-gradient(135deg,rgba(20,83,45,.06),rgba(184,134,11,.04));border:1.5px solid rgba(20,83,45,.15);border-radius:12px;padding:16px;direction:rtl;text-align:right;}
         body.dark-mode .instruction-preview{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(218,165,32,.05));border-color:rgba(34,197,94,.2);}
-        .ward-badge{font-size:11px;padding:2px 10px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
+
+        /* Header Ward Pill */
+        .ward-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:12px;font-weight:800;font-size:15px;letter-spacing:.3px;background:linear-gradient(135deg,var(--gold),var(--gold-lt));color:#fff;box-shadow:0 2px 12px rgba(184,134,11,.2);flex-shrink:0;}
+        body.dark-mode .ward-pill{background:linear-gradient(135deg,var(--gold),var(--gold-lt));box-shadow:0 2px 12px rgba(218,165,32,.15);}
 
         /* Login Overlay */
         .login-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;}
@@ -72,11 +75,12 @@
         .pdf-info-label{font-weight:700;color:#000;white-space:nowrap;}
         .pdf-info-value{font-weight:700;color:#000;}
         .pdf-table-wrap{flex:1;display:flex;flex-direction:column;min-height:0;border:1.5px solid #000;}
-        .pdf-thead{display:grid;grid-template-columns:14% 22% 18% 46%;flex-shrink:0;}
+        /* FIX #2: Rebalanced columns — blank widened from 14%→18%, name reduced from 22%→18% */
+        .pdf-thead{display:grid;grid-template-columns:18% 18% 18% 46%;flex-shrink:0;}
         .pdf-th{background:#fff;color:#000;padding:2.5mm 2mm;font-weight:800;font-size:10pt;text-align:center;border-left:1.5px solid #000;border-bottom:1.5px solid #000;display:flex;align-items:center;justify-content:center;}
         .pdf-th:last-child{border-left:none;}
         .pdf-tbody{flex:1;display:grid;grid-template-rows:repeat(9,1fr);}
-        .pdf-row{display:grid;grid-template-columns:14% 22% 18% 46%;border-bottom:1px solid #000;}
+        .pdf-row{display:grid;grid-template-columns:18% 18% 18% 46%;border-bottom:1px solid #000;}
         .pdf-row:last-child{border-bottom:none;}
         .pdf-cell{border-left:1px solid #000;padding:1.5mm 2mm;display:flex;align-items:center;justify-content:center;font-size:9pt;overflow:hidden;background:#fff;}
         .pdf-cell:last-child{border-left:none;}
@@ -100,6 +104,11 @@
         .modal-overlay.modal-active{display:flex;}
         .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);}
         .modal-content{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.2);}
+        @media(max-width:768px){
+            .header-title-text{font-size:15px!important;}
+            .header-sub-text{display:none;}
+            .ward-pill{font-size:13px!important;padding:5px 12px!important;}
+        }
         @media(max-width:640px){.med-grid{grid-template-columns:1fr!important;}.modal-content{max-height:90vh;}.login-card{padding:32px 24px;}}
         @media print{body *{display:none!important;}}
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
@@ -133,28 +142,36 @@
     </div>
 
     <div id="mainApp" style="display:none;position:relative;z-index:1;">
+        <!-- FIX #1: Redesigned header — ward pill is first thing visible, title spans prominently -->
         <header class="sticky top-0 z-50 border-b border-[var(--border)]" style="background:var(--header-bg);backdrop-filter:blur(16px);">
-            <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-mid)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/20">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                <!-- Right side: Ward Pill + Title -->
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <div id="wardPill" class="ward-pill hidden">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span id="wardPillText"></span>
                     </div>
-                    <div>
-                        <h1 class="text-lg md:text-xl font-bold text-[var(--fg)] font-display tracking-tight">Medication Counseling</h1>
-                        <p class="text-xs text-[var(--muted)] font-arabic">أداة تثقيف المريض الدوائي</p>
+                    <div class="min-w-0 flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-mid)] flex items-center justify-center shadow-md flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                        </div>
+                        <div class="min-w-0">
+                            <h1 class="header-title-text text-lg md:text-xl font-bold text-[var(--fg)] font-display tracking-tight truncate">Medication Counseling</h1>
+                            <p class="header-sub-text text-[11px] text-[var(--muted)] font-arabic truncate">أداة تثقيف المريض الدوائي</p>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div id="wardBadge" class="ward-badge hidden" style="background:rgba(20,83,45,.1);color:var(--accent);border:1px solid rgba(20,83,45,.15);"></div>
-                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-xs font-semibold text-[var(--muted)]">متصل</span></div>
-                    <button id="darkToggle" class="w-10 h-10 rounded-xl border border-[var(--border)] flex items-center justify-center hover:border-[var(--accent)] transition-all" style="background:var(--surface);" aria-label="تبديل الوضع الليلي">
-                        <svg id="iconMoon" class="w-5 h-5 text-[var(--fg)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                        <svg id="iconSun" class="w-5 h-5 text-[var(--fg)] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <!-- Left side: Tools -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-xs font-semibold text-[var(--muted)] hidden sm:inline">متصل</span></div>
+                    <button id="darkToggle" class="w-9 h-9 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--accent)] transition-all" style="background:var(--surface);" aria-label="تبديل الوضع الليلي">
+                        <svg id="iconMoon" class="w-[18px] h-[18px] text-[var(--fg)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                        <svg id="iconSun" class="w-[18px] h-[18px] text-[var(--fg)] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     </button>
-                    <button id="logoutBtn" class="w-10 h-10 rounded-xl border border-[var(--border)] flex items-center justify-center hover:border-[var(--danger)] transition-all" style="background:var(--surface);" title="تسجيل الخروج" aria-label="تسجيل الخروج">
-                        <svg class="w-5 h-5 text-[var(--danger)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    <button id="logoutBtn" class="w-9 h-9 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--danger)] transition-all" style="background:var(--surface);" title="تسجيل الخروج" aria-label="تسجيل الخروج">
+                        <svg class="w-[18px] h-[18px] text-[var(--danger)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </button>
-                    <div id="counterBadge" class="hidden px-3 py-1.5 rounded-full text-xs font-bold" style="background:rgba(20,83,45,.1);color:var(--accent);border:1px solid rgba(20,83,45,.15);"><span id="counterText">0</span></div>
+                    <div id="counterBadge" class="hidden px-2.5 py-1.5 rounded-full text-xs font-bold" style="background:rgba(20,83,45,.1);color:var(--accent);border:1px solid rgba(20,83,45,.15);"><span id="counterText">0</span></div>
                 </div>
             </div>
         </header>
@@ -235,12 +252,8 @@
             nephro:[{name:'ون الفا',defaultDose:'0.25mcg'},{name:'كالسيوم',defaultDose:'500mg'},{name:'سيفيلامير',defaultDose:'800mg'}],
             miscellaneous:[{name:'برزلون',defaultDose:'5mg'},{name:'امبرازول',defaultDose:'40mg'},{name:'براسيتول',defaultDose:'500mg'},{name:'فولك اسيد',defaultDose:'5mg'},{name:'كالسيوم',defaultDose:'500mg'},{name:'ثايروكسين',defaultDose:'50mcg'},{name:'فورزيجا',defaultDose:'10mg'},{name:'اورسو',defaultDose:'300mg'},{name:'تكرتول',defaultDose:'200mg'},{name:'كيبرا',defaultDose:'500mg'},{name:'كابابنتين',defaultDose:'300mg'}],
             others:[]};
-
-        /* FIX #2: "5" now correctly maps to "نصف حبة" */
         const PILLS_ARABIC={1:'حبة واحدة',2:'حبتين',3:'ثلاث حبات',4:'أربع حبات',5:'نصف حبة'};
         const FREQ_ARABIC={1:'مرة واحدة',2:'مرتين',3:'ثلاث مرات',4:'أربع مرات'};
-
-        /* FIX #3: added "empty" key for the third method option */
         const METHOD_ARABIC={before:'قبل الطعام',after:'بعد الطعام',empty:'قبل الطعام بساعة أو بعده بساعتين'};
         const WARNING_ARABIC={milk:'لا تؤخذ مع الحليب',drowsy:'تسبب النعاس',water:'اشرب كميات كافية من الماء',crush:'لا تسحق القرص'};
 
@@ -287,7 +300,6 @@
             }
         }
 
-        /* FIX #6: Enter-key support on login fields */
         $('loginUser').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('loginPass').focus();}});
         $('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();attemptLogin();}});
 
@@ -298,15 +310,18 @@
             $('loginUser').value='';$('loginPass').value='';
             $('loginError').textContent='';$('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
             $('mainApp').style.display='none';
-            $('wardBadge').classList.add('hidden');
+            $('wardPill').classList.add('hidden');
             if(unsubscribeFn)unsubscribeFn();
         }
 
+        /* FIX #1: Ward displayed as a prominent gold pill in the header */
         function showWardBadge(){
             if(currentUser&&currentUser.wardName){
-                $('wardBadge').textContent=currentUser.wardName;
-                $('wardBadge').classList.remove('hidden');
-            }else{$('wardBadge').classList.add('hidden');}
+                $('wardPillText').textContent=currentUser.wardName;
+                $('wardPill').classList.remove('hidden');
+            }else{
+                $('wardPill').classList.add('hidden');
+            }
         }
 
         $('loginBtn').addEventListener('click',attemptLogin);
@@ -340,15 +355,12 @@
         function startApp(){
             if(unsubscribeFn)unsubscribeFn();
             const wardId=currentUser?currentUser.wardId:'';
-
-            /* FIX #8: only apply wardId filter if it's non-empty; otherwise fetch all */
             let q;
             if(wardId){
                 q=query(patientsRef,where("wardId","==",wardId),orderBy("saveDate","desc"));
             }else{
                 q=query(patientsRef,orderBy("saveDate","desc"));
             }
-
             unsubscribeFn=onSnapshot(q,
                 (snapshot)=>{setConnection(true);patients=snapshot.docs.map(d=>({id:d.id,...d.data()}));renderQueue();},
                 (err)=>{setConnection(false);showToast('فقد الاتصال','error');}
@@ -371,7 +383,6 @@
             updateCounter();
         }
 
-        /* FIX #11: proper Arabic pluralization for counter */
         function updateCounter(){
             const t=patients.length;
             let label;
@@ -393,27 +404,13 @@
             const raw=$('modalSearch').value.trim(),en=toEnglishNums(raw.toLowerCase());
             let filtered=raw?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(en)||p.name.toLowerCase().includes(en)):[...patients];
             filtered.sort((a,b)=>{const ra=parseInt(toEnglishNums(a.room))||0,rb=parseInt(toEnglishNums(b.room))||0;return ra-rb;});
-
-            /* FIX #7: store currently filtered list so "select all" only affects visible items */
             modalFilteredPatients=filtered;
-
             const list=$('modalPatientList');
             if(!filtered.length){list.innerHTML=`<div class="text-center py-8"><p class="text-[var(--muted)] font-arabic text-sm">لا توجد نتائج</p></div>`;}
             else{list.innerHTML=filtered.map(p=>{const ck=modalSelectedIds.has(p.id)?'checked':'';return`<label class="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors hover:bg-[var(--surface)]" style="border:1px solid var(--border);"><input type="checkbox" ${ck} onchange="window._toggleModalSelect('${p.id}')" class="w-4 h-4 rounded flex-shrink-0 accent-[var(--accent)]"><div class="flex-1 min-w-0"><p class="font-bold text-[var(--fg)] text-sm font-arabic">${p.name}</p><p class="text-xs text-[var(--muted)]">غرفة <span class="font-semibold">${normalizeDigits(p.room)}</span> • سرير ${normalizeDigits(p.bed)} • ${p.meds.length} أدوية</p></div><span class="px-2 py-1 rounded-lg text-xs font-bold flex-shrink-0" style="background:rgba(20,83,45,.08);color:var(--accent);">${normalizeDigits(p.room)}</span></label>`;}).join('');}
             updateModalCount();
         }
-        function updateModalCount(){$('modalSelCount').textContent=modalSelectedIds.size;$('btnModalPrint').disabled=modalSelectedIds.size===0;
-
-            /* FIX #7: "select all" checkbox reflects only the currently filtered set */
-            if(modalFilteredPatients.length>0){
-                $('modalSelAll').checked=modalFilteredPatients.every(p=>modalSelectedIds.has(p.id));
-            }else{
-                $('modalSelAll').checked=false;
-            }
-            /* Partial indeterminate state */
-            const checkedInFilter=modalFilteredPatients.filter(p=>modalSelectedIds.has(p.id)).length;
-            $('modalSelAll').indeterminate=checkedInFilter>0&&checkedInFilter<modalFilteredPatients.length;
-        }
+        function updateModalCount(){$('modalSelCount').textContent=modalSelectedIds.size;$('btnModalPrint').disabled=modalSelectedIds.size===0;if(modalFilteredPatients.length>0){$('modalSelAll').checked=modalFilteredPatients.every(p=>modalSelectedIds.has(p.id));}else{$('modalSelAll').checked=false;}const checkedInFilter=modalFilteredPatients.filter(p=>modalSelectedIds.has(p.id)).length;$('modalSelAll').indeterminate=checkedInFilter>0&&checkedInFilter<modalFilteredPatients.length;}
         window._toggleModalSelect=(id)=>{if(modalSelectedIds.has(id))modalSelectedIds.delete(id);else modalSelectedIds.add(id);updateModalCount();renderModalList();};
 
         const ROWS_PER_PAGE=9;
@@ -423,10 +420,7 @@
             <div class="pdf-info-row"><div class="pdf-info-item"><span class="pdf-info-value">${displayName}</span></div><div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${patient.room}</span></div><div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${patient.bed}</span></div><div class="pdf-info-item"><span class="pdf-info-value">${printDate}</span></div></div>
             <div class="pdf-table-wrap"><div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div><div class="pdf-tbody">`;
             for(const m of pageMeds){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;}
-
-            /* FIX #10: empty rows use plain cell styling, no large font classes */
             for(let i=0;i<emptyCount;i++){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div></div>`;}
-
             h+=`</div></div>`;
             if(isLastPage){h+=`<div class="pdf-footer"><div class="pdf-sig-block"><div class="pdf-sig-label">توقيع الصيدلاني السريري</div><div class="pdf-sig-line"></div></div><div class="pdf-watermark">Clinical Pharmacy Counseling Tool</div></div>`;}
             const d=document.createElement('div');d.className='pdf-page';d.innerHTML=h;return d;
@@ -469,21 +463,13 @@
         $('btnClearQueue').addEventListener('click',()=>{if(!patients.length)return;patients.forEach(p=>{deleteDoc(doc(db,"counseling_patients",p.id)).catch(()=>{});});showToast('تم مسح الطابور','info');});
         $('btnOpenPrintModal').addEventListener('click',openPrintModal);
         $('modalSearch').addEventListener('input',()=>renderModalList());
-
-        /* FIX #7: select-all now only toggles the currently filtered list */
         $('modalSelAll').addEventListener('change',(e)=>{
-            if(e.target.checked){
-                modalFilteredPatients.forEach(p=>modalSelectedIds.add(p.id));
-            }else{
-                modalFilteredPatients.forEach(p=>modalSelectedIds.delete(p.id));
-            }
-            updateModalCount();
-            renderModalList();
+            if(e.target.checked){modalFilteredPatients.forEach(p=>modalSelectedIds.add(p.id));}
+            else{modalFilteredPatients.forEach(p=>modalSelectedIds.delete(p.id));}
+            updateModalCount();renderModalList();
         });
-
         $('btnModalPrint').addEventListener('click',async()=>{await generatePDF(patients.filter(p=>modalSelectedIds.has(p.id)));closePrintModal();});
 
-        /* SESSION CHECK LOGIC */
         const savedSession=sessionStorage.getItem('counseling_session');
         if(savedSession){
             try{

@@ -46,10 +46,9 @@
         .live-dot.offline{background:#EF4444;animation:none;}
         .instruction-preview{background:linear-gradient(135deg,rgba(20,83,45,.06),rgba(184,134,11,.04));border:1.5px solid rgba(20,83,45,.15);border-radius:12px;padding:16px;direction:rtl;text-align:right;}
         body.dark-mode .instruction-preview{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(218,165,32,.05));border-color:rgba(34,197,94,.2);}
-
-        /* Header Ward Pill */
-        .ward-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:12px;font-weight:800;font-size:15px;letter-spacing:.3px;background:linear-gradient(135deg,var(--gold),var(--gold-lt));color:#fff;box-shadow:0 2px 12px rgba(184,134,11,.2);flex-shrink:0;}
-        body.dark-mode .ward-pill{background:linear-gradient(135deg,var(--gold),var(--gold-lt));box-shadow:0 2px 12px rgba(218,165,32,.15);}
+        .ward-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:10px;font-weight:800;font-size:13px;letter-spacing:.3px;background:linear-gradient(135deg,var(--gold),var(--gold-lt));color:#fff;box-shadow:0 2px 10px rgba(184,134,11,.18);flex-shrink:0;}
+        body.dark-mode .ward-pill{box-shadow:0 2px 10px rgba(218,165,32,.12);}
+        .header-divider{height:1px;background:var(--border);opacity:.5;}
 
         /* Login Overlay */
         .login-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;}
@@ -75,7 +74,6 @@
         .pdf-info-label{font-weight:700;color:#000;white-space:nowrap;}
         .pdf-info-value{font-weight:700;color:#000;}
         .pdf-table-wrap{flex:1;display:flex;flex-direction:column;min-height:0;border:1.5px solid #000;}
-        /* FIX #2: Rebalanced columns — blank widened from 14%→18%, name reduced from 22%→18% */
         .pdf-thead{display:grid;grid-template-columns:18% 18% 18% 46%;flex-shrink:0;}
         .pdf-th{background:#fff;color:#000;padding:2.5mm 2mm;font-weight:800;font-size:10pt;text-align:center;border-left:1.5px solid #000;border-bottom:1.5px solid #000;display:flex;align-items:center;justify-content:center;}
         .pdf-th:last-child{border-left:none;}
@@ -104,12 +102,7 @@
         .modal-overlay.modal-active{display:flex;}
         .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);}
         .modal-content{position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.2);}
-        @media(max-width:768px){
-            .header-title-text{font-size:15px!important;}
-            .header-sub-text{display:none;}
-            .ward-pill{font-size:13px!important;padding:5px 12px!important;}
-        }
-        @media(max-width:640px){.med-grid{grid-template-columns:1fr!important;}.modal-content{max-height:90vh;}.login-card{padding:32px 24px;}}
+        @media(max-width:640px){.med-grid{grid-template-columns:1fr!important;}.modal-content{max-height:90vh;}.login-card{padding:32px 24px;}.header-title-text{font-size:17px!important;}.header-sub-text{font-size:10px!important;}}
         @media print{body *{display:none!important;}}
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}}
     </style>
@@ -142,36 +135,42 @@
     </div>
 
     <div id="mainApp" style="display:none;position:relative;z-index:1;">
-        <!-- FIX #1: Redesigned header — ward pill is first thing visible, title spans prominently -->
+        <!-- Two-row header: title on top, tools below -->
         <header class="sticky top-0 z-50 border-b border-[var(--border)]" style="background:var(--header-bg);backdrop-filter:blur(16px);">
-            <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-                <!-- Right side: Ward Pill + Title -->
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                    <div id="wardPill" class="ward-pill hidden">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                        <span id="wardPillText"></span>
+            <div class="max-w-6xl mx-auto px-4">
+                <!-- Row 1: Logo + Title -->
+                <div class="flex items-center justify-center gap-3 pt-3 pb-2">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-mid)] flex items-center justify-center shadow-md flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
                     </div>
-                    <div class="min-w-0 flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-mid)] flex items-center justify-center shadow-md flex-shrink-0">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
-                        </div>
-                        <div class="min-w-0">
-                            <h1 class="header-title-text text-lg md:text-xl font-bold text-[var(--fg)] font-display tracking-tight truncate">Medication Counseling</h1>
-                            <p class="header-sub-text text-[11px] text-[var(--muted)] font-arabic truncate">أداة تثقيف المريض الدوائي</p>
-                        </div>
+                    <div class="text-center">
+                        <h1 class="header-title-text text-xl md:text-2xl font-bold text-[var(--fg)] font-display tracking-tight leading-tight">Medication Counseling</h1>
+                        <p class="header-sub-text text-[11px] text-[var(--muted)] font-arabic leading-tight">أداة تثقيف المريض الدوائي</p>
                     </div>
                 </div>
-                <!-- Left side: Tools -->
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-xs font-semibold text-[var(--muted)] hidden sm:inline">متصل</span></div>
-                    <button id="darkToggle" class="w-9 h-9 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--accent)] transition-all" style="background:var(--surface);" aria-label="تبديل الوضع الليلي">
-                        <svg id="iconMoon" class="w-[18px] h-[18px] text-[var(--fg)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                        <svg id="iconSun" class="w-[18px] h-[18px] text-[var(--fg)] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    </button>
-                    <button id="logoutBtn" class="w-9 h-9 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--danger)] transition-all" style="background:var(--surface);" title="تسجيل الخروج" aria-label="تسجيل الخروج">
-                        <svg class="w-[18px] h-[18px] text-[var(--danger)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                    </button>
-                    <div id="counterBadge" class="hidden px-2.5 py-1.5 rounded-full text-xs font-bold" style="background:rgba(20,83,45,.1);color:var(--accent);border:1px solid rgba(20,83,45,.15);"><span id="counterText">0</span></div>
+                <!-- Divider -->
+                <div class="header-divider"></div>
+                <!-- Row 2: Ward | Counter | Connection | Dark | Logout -->
+                <div class="flex items-center justify-between gap-3 py-2">
+                    <!-- Right side -->
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div id="wardPill" class="ward-pill hidden">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <span id="wardPillText"></span>
+                        </div>
+                        <div id="counterBadge" class="hidden px-2.5 py-1 rounded-lg text-xs font-bold" style="background:rgba(20,83,45,.08);color:var(--accent);border:1px solid rgba(20,83,45,.12);"><span id="counterText">0</span></div>
+                    </div>
+                    <!-- Left side -->
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-[11px] font-semibold text-[var(--muted)]">متصل</span></div>
+                        <button id="darkToggle" class="w-8 h-8 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--accent)] transition-all" style="background:var(--surface);" aria-label="تبديل الوضع الليلي">
+                            <svg id="iconMoon" class="w-4 h-4 text-[var(--fg)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                            <svg id="iconSun" class="w-4 h-4 text-[var(--fg)] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        </button>
+                        <button id="logoutBtn" class="w-8 h-8 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--danger)] transition-all" style="background:var(--surface);" title="تسجيل الخروج" aria-label="تسجيل الخروج">
+                            <svg class="w-4 h-4 text-[var(--danger)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -198,7 +197,7 @@
                     </div>
                     <div class="med-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التكرار</label><select id="selFreq" class="w-full px-4 py-3 rounded-xl"><option value="1">مرة واحدة يومياً</option><option value="2">مرتين يومياً</option><option value="3">ثلاث مرات يومياً</option><option value="4">أربع مرات يومياً</option></select></div>
-                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="٨ صباحاً">٨ صباحاً</option><option value="٩ صباحاً">٩ صباحاً</option><option value="١٠ صباحاً">١٠ صباحاً</option><option value="١١ صباحاً">١١ صباحاً</option><option value="١٢ ظهراً">١٢ ظهراً</option><option value="٢ ظهراً">٢ ظهراً</option><option value="٣ ظهراً">٣ ظهراً</option><option value="٤ عصراً">٤ عصراً</option><option value="٥ عصراً">٥ عصراً</option><option value="٦ مساءاً">٦ مساءاً</option><option value="٩ ليلاً">٩ ليلاً</option><option value="١٠ ليلاً">١٠ ليلاً</option><option value="١٠ صباحاً-١٠ ليلاً">١٠ صباحاً-١٠ ليلاً</option><option value="١٢ ظهراً-١٢ ليلاً">١٢ ظهراً-١٢ ليلاً</option><option value="١٢ ظهراً-٨ ليلاً">١٢ ظهراً-٨ ليلاً</option><option value="٨ صباحاً-٤ عصراً-١٢ ليلاً">٨ صباحاً-٤ عصراً-١٢ ليلاً</option><option value="٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً">٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="٨ صباحاً">٨ صباحاً</option><option value="٩ صباحاً">٩ صباحاً</option><option value="١٠ صباحاً">١٠ صباحاً</option><option value="١١ صباحاً">١١ صباحاً</option><option value="١٢ ظهراً">١٢ ظهراً</option><option value="٢ ظهراً">٢ ظهراً</option><option value="٣ ظهراً">٣ ظهراً</option><option value="٤ عصراً">٤ عصراً</option><option value="٥ عصراً">٥ عصراً</option><option value="٦ مساءاً">٦ مساءاً</option><option value="٩ ليلاً">٩ ليلاً</option><option value="١٠ ليلاً">١٠ ليلاً</option><option value="١٠ صباحاً-١٠ ليلاً">١٠ صباحاً-١٠ ليلاً</option><option value="١٢ ظهراً-١٢ ليلاً">١٢ ظهراً-١٢ ليلاً</option><option value="١٢ ظهراً-٨ ليلاً">١٢ ظهراً-١٢ ليلاً</option><option value="٨ صباحاً-٤ عصراً-١٢ ليلاً">٨ صباحاً-٤ عصراً-١٢ ليلاً</option><option value="٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً">٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً</option></select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">طريقة الإعطاء</label><select id="selMethod" class="w-full px-4 py-3 rounded-xl"><option value="after">بعد الطعام مباشرة</option><option value="before">قبل الطعام بنصف ساعة</option><option value="empty">قبل الطعام بساعة او بعده بساعتين</option></select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">ملاحظات تحذيرية</label><select id="selWarning" class="w-full px-4 py-3 rounded-xl"><option value="">بدون</option><option value="milk">لا تؤخذ مع الحليب</option><option value="drowsy">تسبب النعاس</option><option value="water">اشرب كميات كافية من الماء</option><option value="crush">لا تسحق القرص</option></select></div>
                     </div>
@@ -314,7 +313,6 @@
             if(unsubscribeFn)unsubscribeFn();
         }
 
-        /* FIX #1: Ward displayed as a prominent gold pill in the header */
         function showWardBadge(){
             if(currentUser&&currentUser.wardName){
                 $('wardPillText').textContent=currentUser.wardName;
@@ -356,11 +354,8 @@
             if(unsubscribeFn)unsubscribeFn();
             const wardId=currentUser?currentUser.wardId:'';
             let q;
-            if(wardId){
-                q=query(patientsRef,where("wardId","==",wardId),orderBy("saveDate","desc"));
-            }else{
-                q=query(patientsRef,orderBy("saveDate","desc"));
-            }
+            if(wardId){q=query(patientsRef,where("wardId","==",wardId),orderBy("saveDate","desc"));}
+            else{q=query(patientsRef,orderBy("saveDate","desc"));}
             unsubscribeFn=onSnapshot(q,
                 (snapshot)=>{setConnection(true);patients=snapshot.docs.map(d=>({id:d.id,...d.data()}));renderQueue();},
                 (err)=>{setConnection(false);showToast('فقد الاتصال','error');}

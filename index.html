@@ -49,8 +49,6 @@
         .ward-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:10px;font-weight:800;font-size:13px;letter-spacing:.3px;background:linear-gradient(135deg,var(--gold),var(--gold-lt));color:#fff;box-shadow:0 2px 10px rgba(184,134,11,.18);flex-shrink:0;}
         body.dark-mode .ward-pill{box-shadow:0 2px 10px rgba(218,165,32,.12);}
         .header-divider{height:1px;background:var(--border);opacity:.5;}
-
-        /* Login Overlay */
         .login-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;}
         .login-overlay.login-active{display:flex;}
         .login-bg{position:absolute;inset:0;background:linear-gradient(160deg,#0A1F0E 0%,#14532D 35%,#1A0F00 100%);}
@@ -63,8 +61,6 @@
         .login-input:-webkit-autofill{-webkit-box-shadow:0 0 0 30px rgba(255,255,255,.07) inset!important;-webkit-text-fill-color:white!important;}
         .login-error{color:#FCA5A5;font-size:13px;text-align:center;min-height:20px;font-family:'Cairo',sans-serif;}
         .login-loader{color:rgba(255,255,255,.6);font-size:13px;text-align:center;font-family:'Cairo',sans-serif;animation:loginPulse 1.2s ease infinite;}
-
-        /* PDF — B&W */
         #pdf-render-container{position:absolute;left:-9999px;top:0;z-index:-1000;opacity:0;pointer-events:none;}
         .pdf-page{width:210mm;height:297mm;padding:10mm 12mm;background:#fff;box-sizing:border-box;font-family:'Cairo',sans-serif;direction:rtl;color:#000;display:flex;flex-direction:column;}
         .pdf-title{text-align:center;font-size:16pt;font-weight:800;color:#000;margin-bottom:1.5mm;flex-shrink:0;}
@@ -93,7 +89,6 @@
         .pdf-sig-label{font-size:11pt;font-weight:800;color:#000;direction:rtl;display:inline-block;}
         .pdf-sig-line{border-bottom:1.5px solid #000;width:65mm;margin-top:1.5mm;height:14mm;}
         .pdf-watermark{text-align:right;direction:ltr;font-size:6.5pt;color:#999;}
-
         #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 28px;border-radius:14px;font-weight:600;font-size:14px;z-index:10000;opacity:0;transition:all .35s cubic-bezier(.22,1,.36,1);pointer-events:none;font-family:'Cairo',sans-serif;direction:rtl;}
         #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
         .patient-card{opacity:0;animation:fadeUp .5s cubic-bezier(.22,1,.36,1) forwards;}
@@ -149,11 +144,11 @@
                 <div class="header-divider"></div>
                 <div class="flex items-center justify-between gap-3 py-2">
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <div id="wardPill" class="ward-pill" style="display:none;">
+                        <div id="wardPill" style="display:none;">
                             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             <span id="wardPillText"></span>
                         </div>
-                        <div id="counterBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold" style="display:none;background:rgba(20,83,45,.08);color:var(--accent);border:1px solid rgba(20,83,45,.12);"><span id="counterText">0</span></div>
+                        <div id="counterBadge" style="display:none;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(20,83,45,.08);color:var(--accent);border:1px solid rgba(20,83,45,.12);"><span id="counterText">0</span></div>
                     </div>
                     <div class="flex items-center gap-1.5 flex-shrink-0">
                         <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-[11px] font-semibold text-[var(--muted)]">متصل</span></div>
@@ -191,7 +186,7 @@
                     </div>
                     <div class="med-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">التكرار</label><select id="selFreq" class="w-full px-4 py-3 rounded-xl"><option value="1">مرة واحدة يومياً</option><option value="2">مرتين يومياً</option><option value="3">ثلاث مرات يومياً</option><option value="4">أربع مرات يومياً</option></select></div>
-                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="٨ صباحاً">٨ صباحاً</option><option value="٩ صباحاً">٩ صباحاً</option><option value="١٠ صباحاً">١٠ صباحاً</option><option value="١١ صباحاً">١١ صباحاً</option><option value="١٢ ظهراً">١٢ ظهراً</option><option value="٢ ظهراً">٢ ظهراً</option><option value="٣ ظهراً">٣ ظهراً</option><option value="٤ عصراً">٤ عصراً</option><option value="٥ عصراً">٥ عصراً</option><option value="٦ مساءاً">٦ مساءاً</option><option value="٩ ليلاً">٩ ليلاً</option><option value="١٠ ليلاً">١٠ ليلاً</option><option value="١٠ صباحاً-١٠ ليلاً">١٠ صباحاً-١٠ ليلاً</option><option value="١٢ ظهراً-١٢ ليلاً">١٢ ظهراً-١٢ ليلاً</option><option value="١٢ ظهراً-٨ ليلاً">١٢ ظهراً-١٢ ليلاً</option><option value="٨ صباحاً-٤ عصراً-١٢ ليلاً">٨ صباحاً-٤ عصراً-١٢ ليلاً</option><option value="٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً">٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً</option></select></div>
+                        <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">وقت الإعطاء</label><select id="selTiming" class="w-full px-4 py-3 rounded-xl"><option value="">-- اختر الوقت --</option><option value="٨ صباحاً">٨ صباحاً</option><option value="٩ صباحاً">٩ صباحاً</option><option value="١٠ صباحاً">١٠ صباحاً</option><option value="١١ صباحاً">١١ صباحاً</option><option value="١٢ ظهراً">١٢ ظهراً</option><option value="٢ ظهراً">٢ ظهراً</option><option value="٣ ظهراً">٣ ظهراً</option><option value="٤ عصراً">٤ عصراً</option><option value="٥ عصراً">٥ عصراً</option><option value="٦ مساءاً">٦ مساءاً</option><option value="٩ ليلاً">٩ ليلاً</option><option value="١٠ ليلاً">١٠ ليلاً</option><option value="١٠ صباحاً-١٠ ليلاً">١٠ صباحاً-١٠ ليلاً</option><option value="١٢ ظهراً-١٢ ليلاً">١٢ ظهراً-١٢ ليلاً</option><option value="١٢ ظهراً-٨ ليلاً">١٢ ظهراً-٨ ليلاً</option><option value="٨ صباحاً-٤ عصراً-١٢ ليلاً">٨ صباحاً-٤ عصراً-١٢ ليلاً</option><option value="٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً">٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً</option></select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">طريقة الإعطاء</label><select id="selMethod" class="w-full px-4 py-3 rounded-xl"><option value="after">بعد الطعام مباشرة</option><option value="before">قبل الطعام بنصف ساعة</option><option value="empty">قبل الطعام بساعة او بعده بساعتين</option></select></div>
                         <div class="space-y-2"><label class="block text-sm font-semibold text-[var(--fg)] font-arabic">ملاحظات تحذيرية</label><select id="selWarning" class="w-full px-4 py-3 rounded-xl"><option value="">بدون</option><option value="milk">لا تؤخذ مع الحليب</option><option value="drowsy">تسبب النعاس</option><option value="water">اشرب كميات كافية من الماء</option><option value="crush">لا تسحق القرص</option></select></div>
                     </div>
@@ -307,11 +302,11 @@
             if(unsubscribeFn)unsubscribeFn();
         }
 
-        /* FIX: Use inline style to guarantee visibility — avoids CSS cascade conflict with .ward-pill display */
+        /* FIX: Explicitly set display to inline-flex — bypasses all CSS cascade conflicts */
         function showWardBadge(){
             if(currentUser&&currentUser.wardName){
                 $('wardPillText').textContent=currentUser.wardName;
-                $('wardPill').style.display='';
+                $('wardPill').style.display='inline-flex';
             }else{
                 $('wardPill').style.display='none';
             }
@@ -368,8 +363,8 @@
             const f=toEnglishNums($('filterRoom').value.trim().toLowerCase());
             const filtered=f?patients.filter(p=>toEnglishNums(p.room.toLowerCase()).includes(f)):patients;
             const g=$('queueGrid'),e=$('emptyState');
-            if(!filtered.length){g.innerHTML='';e.classList.remove('hidden');}
-            else{e.classList.add('hidden');g.innerHTML=filtered.map(p=>{const ds=new Date(p.saveDate).toLocaleDateString('ar-IQ',{year:'numeric',month:'short',day:'numeric'});const ie=editingPatientId===p.id;return`<div class="patient-card card overflow-hidden ${ie?'ring-2 ring-purple-500':''}"><div class="p-4 flex items-center justify-between" style="background:var(--surface);border-bottom:1px solid var(--border);"><div class="flex items-center gap-3"><div class="w-2 h-8 rounded-full ${ie?'bg-purple-500':'bg-[var(--accent)]'}"></div><div><h3 class="font-bold text-[var(--fg)] font-arabic text-sm">${p.name}</h3><p class="text-xs text-[var(--muted)]">غرفة ${normalizeDigits(p.room)} • سرير ${normalizeDigits(p.bed)} • ${ds}</p></div></div><div class="flex gap-1"><button onclick="window._editPatient('${p.id}')" class="p-2 rounded-lg hover:bg-purple-50 transition-colors" style="color:#6D28D9;" title="تعديل"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button><button onclick="window._deletePatient('${p.id}')" class="p-2 rounded-lg hover:bg-red-50 transition-colors" style="color:var(--danger);" title="حذف"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></div><div class="p-4 space-y-2">${p.meds.map(m=>`<div class="flex items-start justify-between gap-2 text-xs border-b border-dashed last:border-0 pb-2" style="border-color:var(--border);"><div class="min-w-0"><span class="font-bold text-[var(--fg)]">${m.drugName}</span><span class="font-semibold" style="color:var(--accent);"> ${m.dose} X ${m.freq}</span>${m.timing?`<span class="font-semibold" style="color:var(--gold);"> • ${m.timing}</span>`:''}</div><div class="text-left flex-shrink-0 font-arabic text-[10px] leading-relaxed" style="color:var(--muted);max-width:140px;">${m.instruction}</div></div>`).join('')}</div></div>`;}).join('');}
+            if(!filtered.length){g.innerHTML='';e.style.display='';}
+            else{e.style.display='none';g.innerHTML=filtered.map(p=>{const ds=new Date(p.saveDate).toLocaleDateString('ar-IQ',{year:'numeric',month:'short',day:'numeric'});const ie=editingPatientId===p.id;return`<div class="patient-card card overflow-hidden ${ie?'ring-2 ring-purple-500':''}"><div class="p-4 flex items-center justify-between" style="background:var(--surface);border-bottom:1px solid var(--border);"><div class="flex items-center gap-3"><div class="w-2 h-8 rounded-full ${ie?'bg-purple-500':'bg-[var(--accent)]'}"></div><div><h3 class="font-bold text-[var(--fg)] font-arabic text-sm">${p.name}</h3><p class="text-xs text-[var(--muted)]">غرفة ${normalizeDigits(p.room)} • سرير ${normalizeDigits(p.bed)} • ${ds}</p></div></div><div class="flex gap-1"><button onclick="window._editPatient('${p.id}')" class="p-2 rounded-lg hover:bg-purple-50 transition-colors" style="color:#6D28D9;" title="تعديل"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button><button onclick="window._deletePatient('${p.id}')" class="p-2 rounded-lg hover:bg-red-50 transition-colors" style="color:var(--danger);" title="حذف"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div></div><div class="p-4 space-y-2">${p.meds.map(m=>`<div class="flex items-start justify-between gap-2 text-xs border-b border-dashed last:border-0 pb-2" style="border-color:var(--border);"><div class="min-w-0"><span class="font-bold text-[var(--fg)]">${m.drugName}</span><span class="font-semibold" style="color:var(--accent);"> ${m.dose} X ${m.freq}</span>${m.timing?`<span class="font-semibold" style="color:var(--gold);"> • ${m.timing}</span>`:''}</div><div class="text-left flex-shrink-0 font-arabic text-[10px] leading-relaxed" style="color:var(--muted);max-width:140px;">${m.instruction}</div></div>`).join('')}</div></div>`;}).join('');}
             updateCounter();
         }
 
@@ -403,7 +398,6 @@
         function updateModalCount(){$('modalSelCount').textContent=modalSelectedIds.size;$('btnModalPrint').disabled=modalSelectedIds.size===0;if(modalFilteredPatients.length>0){$('modalSelAll').checked=modalFilteredPatients.every(p=>modalSelectedIds.has(p.id));}else{$('modalSelAll').checked=false;}const checkedInFilter=modalFilteredPatients.filter(p=>modalSelectedIds.has(p.id)).length;$('modalSelAll').indeterminate=checkedInFilter>0&&checkedInFilter<modalFilteredPatients.length;}
         window._toggleModalSelect=(id)=>{if(modalSelectedIds.has(id))modalSelectedIds.delete(id);else modalSelectedIds.add(id);updateModalCount();renderModalList();};
 
-        /* Dynamic font sizing for PDF instruction cells — reduces size when content is long */
         function getInstrStyles(m){
             const ml=(m.instruction||'').length;
             const tl=(m.timing||'').length;

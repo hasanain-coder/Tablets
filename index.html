@@ -28,7 +28,7 @@
         input,select,textarea{background:var(--surface);color:var(--fg);border:1.5px solid var(--border);transition:all .25s;font-size:14px;}
         input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(20,83,45,.1);background:var(--card);}
         body.dark-mode input,body.dark-mode select,body.dark-mode textarea{color:#E7E5E0!important;caret-color:#E7E5E0;}
-        input:-webkit-autofill,input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 30px var(--surface) inset!important;-webkit-text-fill-color:var(--fg)!important;}
+        input:-webkit-autofill,input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 30px var(--surface) inset!important;-webkit-text-fill-color:var(--fg!important);}
         body.dark-mode input:-webkit-autofill{-webkit-text-fill-color:#E7E5E0!important;}
         .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-mid));color:#fff;transition:all .3s;position:relative;overflow:hidden;}
         .btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);background-size:200% 100%;animation:shimmer 3s ease infinite;}
@@ -76,14 +76,14 @@
         .pdf-tbody{flex:1;display:grid;grid-template-rows:repeat(9,1fr);}
         .pdf-row{display:grid;grid-template-columns:18% 18% 18% 46%;border-bottom:1px solid #000;}
         .pdf-row:last-child{border-bottom:none;}
-        .pdf-cell{border-left:1px solid #000;padding:1.5mm 2mm;display:flex;align-items:center;justify-content:center;font-size:9pt;overflow:hidden;background:#fff;}
+        .pdf-cell{border-left:1px solid #000;padding:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;}
         .pdf-cell:last-child{border-left:none;}
-        .cell-name{font-weight:800;text-align:center;direction:ltr;font-size:13.5pt;}
-        .cell-dose{font-weight:800;text-align:center;direction:ltr;font-size:13.5pt;}
-        .cell-instr{align-items:flex-start;justify-content:flex-start;text-align:right;direction:rtl;font-weight:600;line-height:1.6;font-size:10.2pt;padding:1.5mm 2.5mm;background:#fff;}
-        .instr-main{font-weight:800;font-size:10.8pt;}
-        .instr-timing{color:#000;font-weight:700;font-size:9.6pt;margin-top:.5mm;}
-        .instr-warning{color:#000;font-weight:700;font-size:9pt;margin-top:.3mm;text-decoration:underline;}
+        .cell-name{font-weight:800;text-align:center;direction:ltr;font-size:13.5pt;padding:1mm;}
+        .cell-dose{font-weight:800;text-align:center;direction:ltr;font-size:13.5pt;padding:1mm;}
+        .cell-instr{align-items:center;justify-content:flex-start;text-align:right;direction:rtl;font-weight:600;padding:0.5mm 2.5mm;background:#fff;}
+        .instr-main{font-weight:800;}
+        .instr-timing{color:#000;font-weight:700;}
+        .instr-warning{color:#000;font-weight:700;text-decoration:underline;}
         .pdf-footer{flex-shrink:0;margin-top:3mm;padding-top:2.5mm;border-top:1.5px solid #000;direction:ltr;display:flex;justify-content:space-between;align-items:flex-end;}
         .pdf-sig-block{text-align:left;}
         .pdf-sig-label{font-size:11pt;font-weight:800;color:#000;direction:rtl;display:inline-block;}
@@ -402,14 +402,20 @@
             const tl=(m.timing||'').length;
             const wl=(m.warningText||'').length;
             const total=ml+tl+wl;
-            if(total>110) return{ms:'font-size:6.5pt',ts:'font-size:6pt',ws:'font-size:5.8pt',lh:'line-height:1',mt:'margin-top:0mm',pad:'padding:0mm 1.5mm'};
-            if(total>95)  return{ms:'font-size:6.8pt',ts:'font-size:6.2pt',ws:'font-size:6pt',lh:'line-height:1',mt:'margin-top:0mm',pad:'padding:0mm 1.5mm'};
-            if(total>85)  return{ms:'font-size:7.2pt',ts:'font-size:6.6pt',ws:'font-size:6.4pt',lh:'line-height:1.05',mt:'margin-top:0mm',pad:'padding:0mm 2mm'};
-            if(total>75)  return{ms:'font-size:7.8pt',ts:'font-size:7.2pt',ws:'font-size:6.8pt',lh:'line-height:1.1',mt:'margin-top:0mm',pad:'padding:0mm 2mm'};
-            if(total>65)  return{ms:'font-size:8.5pt',ts:'font-size:7.8pt',ws:'font-size:7.4pt',lh:'line-height:1.15',mt:'margin-top:0mm',pad:'padding:0.5mm 2mm'};
-            if(total>55)  return{ms:'font-size:9.2pt',ts:'font-size:8.6pt',ws:'font-size:8pt',lh:'line-height:1.25',mt:'margin-top:0mm',pad:'padding:0.5mm 2.5mm'};
-            if(total>45)  return{ms:'font-size:9.8pt',ts:'font-size:9.2pt',ws:'font-size:8.6pt',lh:'line-height:1.35',mt:'margin-top:0.2mm',pad:'padding:1mm 2.5mm'};
-            return{ms:'',ts:'',ws:'',lh:'',mt:'margin-top:0.5mm',pad:''};
+            const dnLen = (m.drugName || '').length;
+
+            // نظام تصغير الخط الديناميكي للأدوية (Drug Name)
+            let dnStyle = 'font-size:13.5pt;';
+            if(dnLen > 25) dnStyle = 'font-size:9.5pt;';
+            else if(dnLen > 18) dnStyle = 'font-size:11pt;';
+
+            // نظام تصغير الخط الديناميكي للتعليمات (Instructions) لمنع الـ Clipping
+            if(total > 120) return{ms:'font-size:6.5pt',ts:'font-size:6.2pt',ws:'font-size:6.2pt',lh:'line-height:0.9',mt:'margin-top:0mm',pad:'padding:0mm 1.5mm',dns:dnStyle};
+            if(total > 100) return{ms:'font-size:7.2pt',ts:'font-size:6.8pt',ws:'font-size:6.8pt',lh:'line-height:1.0',mt:'margin-top:0.1mm',pad:'padding:0mm 2mm',dns:dnStyle};
+            if(total > 80)  return{ms:'font-size:8pt',ts:'font-size:7.5pt',ws:'font-size:7.5pt',lh:'line-height:1.1',mt:'margin-top:0.1mm',pad:'padding:0.5mm 2mm',dns:dnStyle};
+            if(total > 60)  return{ms:'font-size:9pt',ts:'font-size:8.5pt',ws:'font-size:8pt',lh:'line-height:1.2',mt:'margin-top:0.2mm',pad:'padding:1mm 2.5mm',dns:dnStyle};
+            if(total > 40)  return{ms:'font-size:10.2pt',ts:'font-size:9.4pt',ws:'font-size:8.8pt',lh:'line-height:1.4',mt:'margin-top:0.3mm',pad:'padding:1.5mm 2.5mm',dns:dnStyle};
+            return{ms:'font-size:10.8pt',ts:'font-size:9.6pt',ws:'font-size:9pt',lh:'line-height:1.6',mt:'margin-top:0.5mm',pad:'padding:1.5mm 2.5mm',dns:dnStyle};
         }
 
         const ROWS_PER_PAGE=9;
@@ -420,7 +426,18 @@
             <div class="pdf-table-wrap"><div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div><div class="pdf-tbody">`;
             for(const m of pageMeds){
                 const s=getInstrStyles(m);
-                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr" style="${s.pad}"><div style="display:flex;flex-direction:column;justify-content:center;height:100%;${s.lh};overflow-wrap:break-word;word-break:break-word;"><div class="instr-main" style="${s.ms}">${m.instruction}</div>${m.timing?`<div class="instr-timing" style="${s.ts}${s.mt}">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning" style="${s.ws}${s.mt}">${m.warningText}</div>`:''}</div></div></div>`;
+                h+=`<div class="pdf-row">
+                    <div class="pdf-cell"></div>
+                    <div class="pdf-cell cell-name" style="${s.dns}">${m.drugName}</div>
+                    <div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div>
+                    <div class="pdf-cell cell-instr" style="${s.pad}">
+                        <div style="display:flex; flex-direction:column; justify-content:center; height:100%; width:100%; ${s.lh}; overflow:hidden; overflow-wrap:break-word; word-break:break-word;">
+                            <div class="instr-main" style="${s.ms}">${m.instruction}</div>
+                            ${m.timing?`<div class="instr-timing" style="${s.ts}; ${s.mt}">${m.timing}</div>`:''}
+                            ${m.warningText?`<div class="instr-warning" style="${s.ws}; ${s.mt}">${m.warningText}</div>`:''}
+                        </div>
+                    </div>
+                </div>`;
             }
             for(let i=0;i<emptyCount;i++){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div></div>`;}
             h+=`</div></div>`;

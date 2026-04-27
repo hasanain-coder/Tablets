@@ -135,10 +135,8 @@
     </div>
 
     <div id="mainApp" style="display:none;position:relative;z-index:1;">
-        <!-- Two-row header: title on top, tools below -->
         <header class="sticky top-0 z-50 border-b border-[var(--border)]" style="background:var(--header-bg);backdrop-filter:blur(16px);">
             <div class="max-w-6xl mx-auto px-4">
-                <!-- Row 1: Logo + Title -->
                 <div class="flex items-center justify-center gap-3 pt-3 pb-2">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-mid)] flex items-center justify-center shadow-md flex-shrink-0">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
@@ -148,19 +146,15 @@
                         <p class="header-sub-text text-[11px] text-[var(--muted)] font-arabic leading-tight">أداة تثقيف المريض الدوائي</p>
                     </div>
                 </div>
-                <!-- Divider -->
                 <div class="header-divider"></div>
-                <!-- Row 2: Ward | Counter | Connection | Dark | Logout -->
                 <div class="flex items-center justify-between gap-3 py-2">
-                    <!-- Right side -->
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <div id="wardPill" class="ward-pill hidden">
+                        <div id="wardPill" class="ward-pill" style="display:none;">
                             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             <span id="wardPillText"></span>
                         </div>
-                        <div id="counterBadge" class="hidden px-2.5 py-1 rounded-lg text-xs font-bold" style="background:rgba(20,83,45,.08);color:var(--accent);border:1px solid rgba(20,83,45,.12);"><span id="counterText">0</span></div>
+                        <div id="counterBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold" style="display:none;background:rgba(20,83,45,.08);color:var(--accent);border:1px solid rgba(20,83,45,.12);"><span id="counterText">0</span></div>
                     </div>
-                    <!-- Left side -->
                     <div class="flex items-center gap-1.5 flex-shrink-0">
                         <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--border)]" style="background:var(--surface);"><span id="connDot" class="live-dot"></span><span id="connText" class="text-[11px] font-semibold text-[var(--muted)]">متصل</span></div>
                         <button id="darkToggle" class="w-8 h-8 rounded-lg border border-[var(--border)] flex items-center justify-center hover:border-[var(--accent)] transition-all" style="background:var(--surface);" aria-label="تبديل الوضع الليلي">
@@ -309,16 +303,17 @@
             $('loginUser').value='';$('loginPass').value='';
             $('loginError').textContent='';$('loginLoader').classList.add('hidden');$('loginBtn').disabled=false;
             $('mainApp').style.display='none';
-            $('wardPill').classList.add('hidden');
+            $('wardPill').style.display='none';
             if(unsubscribeFn)unsubscribeFn();
         }
 
+        /* FIX: Use inline style to guarantee visibility — avoids CSS cascade conflict with .ward-pill display */
         function showWardBadge(){
             if(currentUser&&currentUser.wardName){
                 $('wardPillText').textContent=currentUser.wardName;
-                $('wardPill').classList.remove('hidden');
+                $('wardPill').style.display='';
             }else{
-                $('wardPill').classList.add('hidden');
+                $('wardPill').style.display='none';
             }
         }
 
@@ -387,8 +382,8 @@
             else if(t<=10) label=normalizeDigits(String(t))+' مرضى';
             else label=normalizeDigits(String(t))+' مريض';
             $('counterText').textContent=label;
-            $('counterBadge').classList.toggle('hidden',!t);
-            $('emptyState').classList.toggle('hidden',t>0);
+            $('counterBadge').style.display=t?'inline-block':'none';
+            $('emptyState').style.display=t?'none':'';
         }
 
         function openPrintModal(){if(!patients.length){showToast('لا يوجد مرضى','error');return;}modalSelectedIds.clear();$('modalSearch').value='';$('modalSelAll').checked=false;renderModalList();$('printModal').classList.add('modal-active');}
@@ -408,13 +403,29 @@
         function updateModalCount(){$('modalSelCount').textContent=modalSelectedIds.size;$('btnModalPrint').disabled=modalSelectedIds.size===0;if(modalFilteredPatients.length>0){$('modalSelAll').checked=modalFilteredPatients.every(p=>modalSelectedIds.has(p.id));}else{$('modalSelAll').checked=false;}const checkedInFilter=modalFilteredPatients.filter(p=>modalSelectedIds.has(p.id)).length;$('modalSelAll').indeterminate=checkedInFilter>0&&checkedInFilter<modalFilteredPatients.length;}
         window._toggleModalSelect=(id)=>{if(modalSelectedIds.has(id))modalSelectedIds.delete(id);else modalSelectedIds.add(id);updateModalCount();renderModalList();};
 
+        /* Dynamic font sizing for PDF instruction cells — reduces size when content is long */
+        function getInstrStyles(m){
+            const ml=(m.instruction||'').length;
+            const tl=(m.timing||'').length;
+            const wl=(m.warningText||'').length;
+            const total=ml+tl+wl;
+            if(total>90) return{ms:'font-size:7.6pt',ts:'font-size:7.2pt',ws:'font-size:7pt',lh:'line-height:1.25',pad:'padding:1mm 2mm'};
+            if(total>75) return{ms:'font-size:8.2pt',ts:'font-size:7.8pt',ws:'font-size:7.4pt',lh:'line-height:1.3',pad:'padding:1mm 2mm'};
+            if(total>60) return{ms:'font-size:9pt',ts:'font-size:8.4pt',ws:'font-size:8pt',lh:'line-height:1.4',pad:'padding:1.5mm 2.5mm'};
+            if(total>45) return{ms:'font-size:9.8pt',ts:'font-size:9.2pt',ws:'font-size:8.6pt',lh:'line-height:1.5',pad:'padding:1.5mm 2.5mm'};
+            return{ms:'',ts:'',ws:'',lh:'',pad:''};
+        }
+
         const ROWS_PER_PAGE=9;
         function buildPDFPage(patient,pageMeds,emptyCount,displayName,isLastPage){
             const printDate=new Date().toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'});
             let h=`<div class="pdf-title">ورقة استشارة دوائية للمريض</div><div class="pdf-subtitle">Patient Medication Counseling Sheet</div>
             <div class="pdf-info-row"><div class="pdf-info-item"><span class="pdf-info-value">${displayName}</span></div><div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${patient.room}</span></div><div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${patient.bed}</span></div><div class="pdf-info-item"><span class="pdf-info-value">${printDate}</span></div></div>
             <div class="pdf-table-wrap"><div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div><div class="pdf-tbody">`;
-            for(const m of pageMeds){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;}
+            for(const m of pageMeds){
+                const s=getInstrStyles(m);
+                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr" style="${s.pad}"><div style="${s.lh};overflow-wrap:break-word;word-break:break-word;"><div class="instr-main" style="${s.ms}">${m.instruction}</div>${m.timing?`<div class="instr-timing" style="${s.ts}">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning" style="${s.ws}">${m.warningText}</div>`:''}</div></div></div>`;
+            }
             for(let i=0;i<emptyCount;i++){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div></div>`;}
             h+=`</div></div>`;
             if(isLastPage){h+=`<div class="pdf-footer"><div class="pdf-sig-block"><div class="pdf-sig-label">توقيع الصيدلاني السريري</div><div class="pdf-sig-line"></div></div><div class="pdf-watermark">Clinical Pharmacy Counseling Tool</div></div>`;}

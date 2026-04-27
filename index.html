@@ -28,7 +28,7 @@
         input,select,textarea{background:var(--surface);color:var(--fg);border:1.5px solid var(--border);transition:all .25s;font-size:14px;}
         input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(20,83,45,.1);background:var(--card);}
         body.dark-mode input,body.dark-mode select,body.dark-mode textarea{color:#E7E5E0!important;caret-color:#E7E5E0;}
-        input:-webkit-autofill,input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 30px var(--surface) inset!important;-webkit-text-fill-color:var(--fg)!important;}
+        input:-webkit-autofill,input:-webkit-autofill:focus{-webkit-box-shadow:0 0 0 30px var(--surface) inset!important;-webkit-text-fill-color:var(--fg!important);}
         body.dark-mode input:-webkit-autofill{-webkit-text-fill-color:#E7E5E0!important;}
         .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-mid));color:#fff;transition:all .3s;position:relative;overflow:hidden;}
         .btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);background-size:200% 100%;animation:shimmer 3s ease infinite;}
@@ -144,7 +144,7 @@
                 <div class="header-divider"></div>
                 <div class="flex items-center justify-between gap-3 py-2">
                     <div class="flex items-center gap-2.5 min-w-0">
-                        <div id="wardPill" style="display:none;">
+                        <div id="wardPill" class="ward-pill" style="display:none;">
                             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             <span id="wardPillText"></span>
                         </div>
@@ -275,7 +275,8 @@
                     return;
                 }
                 const userDoc=snapshot.docs[0].data();
-                currentUser={username:user,wardId:userDoc.wardId||'',wardName:userDoc.wardName||''};
+                // FIX: Map wardId to both fields so it shows up in UI
+                currentUser={username:user,wardId:userDoc.wardId||'',wardName:userDoc.wardId||''};
                 sessionStorage.setItem('counseling_session',JSON.stringify(currentUser));
                 $('loginOverlay').classList.remove('login-active');
                 $('mainApp').style.display='block';
@@ -302,13 +303,12 @@
             if(unsubscribeFn)unsubscribeFn();
         }
 
-        /* FIX: Explicitly set display to inline-flex — bypasses all CSS cascade conflicts */
         function showWardBadge(){
-            if(currentUser&&currentUser.wardName){
-                $('wardPillText').textContent=currentUser.wardName;
-                $('wardPill').style.display='inline-flex';
+            if(currentUser && currentUser.wardName){
+                $('wardPillText').textContent = currentUser.wardName;
+                $('wardPill').style.display = 'inline-flex';
             }else{
-                $('wardPill').style.display='none';
+                $('wardPill').style.display = 'none';
             }
         }
 
@@ -398,18 +398,6 @@
         function updateModalCount(){$('modalSelCount').textContent=modalSelectedIds.size;$('btnModalPrint').disabled=modalSelectedIds.size===0;if(modalFilteredPatients.length>0){$('modalSelAll').checked=modalFilteredPatients.every(p=>modalSelectedIds.has(p.id));}else{$('modalSelAll').checked=false;}const checkedInFilter=modalFilteredPatients.filter(p=>modalSelectedIds.has(p.id)).length;$('modalSelAll').indeterminate=checkedInFilter>0&&checkedInFilter<modalFilteredPatients.length;}
         window._toggleModalSelect=(id)=>{if(modalSelectedIds.has(id))modalSelectedIds.delete(id);else modalSelectedIds.add(id);updateModalCount();renderModalList();};
 
-        function getInstrStyles(m){
-            const ml=(m.instruction||'').length;
-            const tl=(m.timing||'').length;
-            const wl=(m.warningText||'').length;
-            const total=ml+tl+wl;
-            if(total>90) return{ms:'font-size:7.6pt',ts:'font-size:7.2pt',ws:'font-size:7pt',lh:'line-height:1.25',pad:'padding:1mm 2mm'};
-            if(total>75) return{ms:'font-size:8.2pt',ts:'font-size:7.8pt',ws:'font-size:7.4pt',lh:'line-height:1.3',pad:'padding:1mm 2mm'};
-            if(total>60) return{ms:'font-size:9pt',ts:'font-size:8.4pt',ws:'font-size:8pt',lh:'line-height:1.4',pad:'padding:1.5mm 2.5mm'};
-            if(total>45) return{ms:'font-size:9.8pt',ts:'font-size:9.2pt',ws:'font-size:8.6pt',lh:'line-height:1.5',pad:'padding:1.5mm 2.5mm'};
-            return{ms:'',ts:'',ws:'',lh:'',pad:''};
-        }
-
         const ROWS_PER_PAGE=9;
         function buildPDFPage(patient,pageMeds,emptyCount,displayName,isLastPage){
             const printDate=new Date().toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'});
@@ -417,8 +405,7 @@
             <div class="pdf-info-row"><div class="pdf-info-item"><span class="pdf-info-value">${displayName}</span></div><div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${patient.room}</span></div><div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${patient.bed}</span></div><div class="pdf-info-item"><span class="pdf-info-value">${printDate}</span></div></div>
             <div class="pdf-table-wrap"><div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div><div class="pdf-tbody">`;
             for(const m of pageMeds){
-                const s=getInstrStyles(m);
-                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr" style="${s.pad}"><div style="${s.lh};overflow-wrap:break-word;word-break:break-word;"><div class="instr-main" style="${s.ms}">${m.instruction}</div>${m.timing?`<div class="instr-timing" style="${s.ts}">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning" style="${s.ws}">${m.warningText}</div>`:''}</div></div></div>`;
+                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;
             }
             for(let i=0;i<emptyCount;i++){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div></div>`;}
             h+=`</div></div>`;

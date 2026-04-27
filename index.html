@@ -235,10 +235,53 @@
         const usersRef=collection(db,"users_config");
         const patientsRef=collection(db,"counseling_patients");
 
-        const DRUG_DB={cardiac:[{name:'اسبرين',defaultDose:'100mg'},{name:'بلافكس',defaultDose:'75mg'},{name:'افاس',defaultDose:'20mg'},{name:'كونكور',defaultDose:'5mg'},{name:'كرستور',defaultDose:'20mg'},{name:'الداكتون',defaultDose:'25mg'},{name:'تورسميد',defaultDose:'10mg'},{name:'املودبين',defaultDose:'5mg'},{name:'كابوتين',defaultDose:'25mg'},{name:'لزنوبريل',defaultDose:'10mg'},{name:'كارفدول',defaultDose:'6.25mg'},{name:'الدوميت',defaultDose:'250mg'},{name:'ميتوبرولول',defaultDose:'50mg'},{name:'اندرال',defaultDose:'40mg'},{name:'ديجوكسين',defaultDose:'125mcg'},{name:'وارفارين',defaultDose:'3mg'},{name:'انجسيد',defaultDose:'0.5mg'},{name:'ايزورديل',defaultDose:'10mg'}],
-            antibiotics:[{name:'ازثرومايسين',defaultDose:'500mg'},{name:'ليفوفلوكساسين',defaultDose:'500mg'},{name:'مثبريم',defaultDose:'480mg'},{name:'سبروفلوكساسين',defaultDose:'500mg'},{name:'دوكسيسايكلين',defaultDose:'100mg'},{name:'فلاجيل',defaultDose:'500mg'},{name:'ريفاكسمين',defaultDose:'550mg'}],
-            nephro:[{name:'ون الفا',defaultDose:'0.25mcg'},{name:'كالسيوم',defaultDose:'500mg'},{name:'سيفيلامير',defaultDose:'800mg'}],
-            miscellaneous:[{name:'برزلون',defaultDose:'5mg'},{name:'امبرازول',defaultDose:'40mg'},{name:'براسيتول',defaultDose:'500mg'},{name:'فولك اسيد',defaultDose:'5mg'},{name:'كالسيوم',defaultDose:'500mg'},{name:'ثايروكسين',defaultDose:'50mcg'},{name:'فورزيجا',defaultDose:'10mg'},{name:'اورسو',defaultDose:'300mg'},{name:'تكرتول',defaultDose:'200mg'},{name:'كيبرا',defaultDose:'500mg'},{name:'كابابنتين',defaultDose:'300mg'}],
+        const DRUG_DB={cardiac:[
+                {name:'اسبرين',defaultDose:'100mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'بلافكس',defaultDose:'75mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٩ صباحاً',defaultWarning:''},
+                {name:'افاس',defaultDose:'20mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كونكور',defaultDose:'5mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كرستور',defaultDose:'20mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٩ ليلاً',defaultWarning:''},
+                {name:'الداكتون',defaultDose:'25mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'تورسميد',defaultDose:'10mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'املودبين',defaultDose:'5mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كابوتين',defaultDose:'25mg',defaultFreq:'2',defaultMethod:'before',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'لزنوبريل',defaultDose:'10mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كارفدول',defaultDose:'6.25mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'الدوميت',defaultDose:'250mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٦ صباحاً-١٢ ظهراً-٦ عصراً-١٢ ليلاً',defaultWarning:''},
+                {name:'ميتوبرولول',defaultDose:'50mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'اندرال',defaultDose:'40mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'ديجوكسين',defaultDose:'125mcg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٩ صباحاً',defaultWarning:''},
+                {name:'وارفارين',defaultDose:'3mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٩ مساءاً',defaultWarning:''},
+                {name:'انجسيد',defaultDose:'0.5mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً-٤ عصراً-١٢ ليلاً',defaultWarning:''},
+                {name:'ايزورديل',defaultDose:'10mg',defaultFreq:'3',defaultMethod:'empty',defaultTiming:'٨ صباحاً-٢ ظهراً-٦ مساءاً',defaultWarning:''}
+            ],
+            antibiotics:[
+                {name:'ازثرومايسين',defaultDose:'500mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٩ صباحاً',defaultWarning:''},
+                {name:'ليفوفلوكساسين',defaultDose:'500mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:'water'},
+                {name:'مثبريم',defaultDose:'480mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:'water'},
+                {name:'سبروفلوكساسين',defaultDose:'500mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:'milk'},
+                {name:'دوكسيسايكلين',defaultDose:'100mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:'milk'},
+                {name:'فلاجيل',defaultDose:'500mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً-٢ ظهراً-٨ مساءاً',defaultWarning:'milk'},
+                {name:'ريفاكسمين',defaultDose:'550mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''}
+            ],
+            nephro:[
+                {name:'ون الفا',defaultDose:'0.25mcg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كالسيوم',defaultDose:'500mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'سيفيلامير',defaultDose:'800mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً-٢ ظهراً-٦ مساءاً',defaultWarning:''}
+            ],
+            miscellaneous:[
+                {name:'برزلون',defaultDose:'5mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٩ ليلاً',defaultWarning:'drowsy'},
+                {name:'امبرازول',defaultDose:'40mg',defaultFreq:'1',defaultMethod:'before',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'براسيتول',defaultDose:'500mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً-٢ ظهراً-٨ مساءاً',defaultWarning:''},
+                {name:'فولك اسيد',defaultDose:'5mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كالسيوم',defaultDose:'500mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'ثايروكسين',defaultDose:'50mcg',defaultFreq:'1',defaultMethod:'empty',defaultTiming:'٨ صباحاً',defaultWarning:'milk'},
+                {name:'فورزيجا',defaultDose:'10mg',defaultFreq:'1',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:'water'},
+                {name:'اورسو',defaultDose:'300mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً-٢ ظهراً-٨ مساءاً',defaultWarning:''},
+                {name:'تكرتول',defaultDose:'200mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:'drowsy'},
+                {name:'كيبرا',defaultDose:'500mg',defaultFreq:'2',defaultMethod:'after',defaultTiming:'٨ صباحاً',defaultWarning:''},
+                {name:'كابابنتين',defaultDose:'300mg',defaultFreq:'3',defaultMethod:'after',defaultTiming:'٨ صباحاً-٢ ظهراً-٨ مساءاً',defaultWarning:'drowsy'}
+            ],
             others:[]};
         const PILLS_ARABIC={1:'حبة واحدة',2:'حبتين',3:'ثلاث حبات',4:'أربع حبات',5:'نصف حبة'};
         const FREQ_ARABIC={1:'مرة واحدة',2:'مرتين',3:'ثلاث مرات',4:'أربع مرات'};
@@ -275,7 +318,6 @@
                     return;
                 }
                 const userDoc=snapshot.docs[0].data();
-                // FIX: Map wardId to both fields so it shows up in UI
                 currentUser={username:user,wardId:userDoc.wardId||'',wardName:userDoc.wardId||''};
                 sessionStorage.setItem('counseling_session',JSON.stringify(currentUser));
                 $('loginOverlay').classList.remove('login-active');
@@ -315,11 +357,26 @@
         $('loginBtn').addEventListener('click',attemptLogin);
         $('logoutBtn').addEventListener('click',logout);
 
-        function updateDrugDropdown(){const c=$('selCategory').value,s=$('selDrug'),u=$('inpCustomDrug');s.innerHTML='';u.classList.add('hidden');s.disabled=true;if(!c){s.innerHTML='<option value="">-- اختر التصنيف أولاً --</option>';return;}s.disabled=false;if(c==='others'){u.classList.remove('hidden');s.innerHTML='<option value="custom">إدخال يدوي</option>';return;}const d=DRUG_DB[c]||[];s.innerHTML='<option value="">-- اختر الدواء --</option>'+d.map(x=>`<option value="${x.name}" data-dose="${x.defaultDose}">${x.name}</option>`).join('');}
-        function onDrugSelected(){const v=$('selDrug').value;if(v&&v!=='custom')$('inpDose').value=$('selDrug').selectedOptions[0].dataset.dose||'';else if(v!=='custom')$('inpDose').value='';updatePreview();}
+        function updateDrugDropdown(){const c=$('selCategory').value,s=$('selDrug'),u=$('inpCustomDrug');s.innerHTML='';u.classList.add('hidden');s.disabled=true;if(!c){s.innerHTML='<option value="">-- اختر التصنيف أولاً --</option>';return;}s.disabled=false;if(c==='others'){u.classList.remove('hidden');s.innerHTML='<option value="custom">إدخال يدوي</option>';return;}const d=DRUG_DB[c]||[];s.innerHTML='<option value="">-- اختر الدواء --</option>'+d.map(x=>`<option value="${x.name}" data-dose="${x.defaultDose}" data-freq="${x.defaultFreq||''}" data-method="${x.defaultMethod||''}" data-timing="${x.defaultTiming||''}" data-warning="${x.defaultWarning||''}">${x.name}</option>`).join('');}
+        function onDrugSelected(){const v=$('selDrug').value,opt=$('selDrug').selectedOptions[0];if(v&&v!=='custom'&&opt){$('inpDose').value=opt.dataset.dose||'';if(opt.dataset.freq)$('selFreq').value=opt.dataset.freq;if(opt.dataset.method)$('selMethod').value=opt.dataset.method;$('selTiming').value=opt.dataset.timing||'';$('selWarning').value=opt.dataset.warning||'';}else if(v!=='custom'){$('inpDose').value='';}updatePreview();}
         function updatePreview(){const p=parseInt($('selPills').value)||1,m=$('selMethod').value,f=parseInt($('selFreq').value)||1,w=$('selWarning').value,t=$('selTiming').value;$('previewText').textContent=generateArabicInstruction(p,m,f);$('previewBox').classList.remove('hidden');if(t){$('previewTiming').textContent='الوقت: '+t;$('previewTiming').classList.remove('hidden');}else $('previewTiming').classList.add('hidden');if(w&&WARNING_ARABIC[w]){$('previewWarning').textContent='تنبيه: '+WARNING_ARABIC[w];$('previewWarning').classList.remove('hidden');}else $('previewWarning').classList.add('hidden');const c=$('selCategory').value,dv=$('selDrug').value,cn=c==='others'?$('inpCustomDrug').value.trim():'';$('btnAddMed').disabled=!(c&&((dv&&dv!=='custom')||(dv==='custom'&&cn))&&$('inpDose').value.trim());}
 
-        function addMedication(){const c=$('selCategory').value,dv=$('selDrug').value;let dn=dv==='custom'?$('inpCustomDrug').value.trim():dv;const dose=$('inpDose').value.trim(),pills=parseInt($('selPills').value)||1,freq=parseInt($('selFreq').value)||1,timing=$('selTiming').value,method=$('selMethod').value,warning=$('selWarning').value;if(!dn||!dose){showToast('أكمل بيانات الدواء','error');return;}if(currentMeds.some(x=>x.drugName.toLowerCase()===dn.toLowerCase())){showToast('هذا الدواء مضاف مسبقاً','error');return;}currentMeds.push({id:generateId(),category:c,drugName:dn,dose,pills,freq,timing,method,warning,instruction:generateArabicInstruction(pills,method,freq),warningText:warning?WARNING_ARABIC[warning]:''});renderMedsList();showToast('تمت إضافة الدواء');$('selDrug').value=c==='others'?'custom':'';$('inpDose').value='';if(c==='others')$('inpCustomDrug').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;}
+        function resetMedInputs(){
+            $('selCategory').value='';
+            updateDrugDropdown();
+            $('inpDose').value='';
+            $('inpCustomDrug').value='';
+            $('inpCustomDrug').classList.add('hidden');
+            $('selPills').value='1';
+            $('selFreq').value='1';
+            $('selTiming').value='';
+            $('selMethod').value='after';
+            $('selWarning').value='';
+            $('previewBox').classList.add('hidden');
+            $('btnAddMed').disabled=true;
+        }
+
+        function addMedication(){const c=$('selCategory').value,dv=$('selDrug').value;let dn=dv==='custom'?$('inpCustomDrug').value.trim():dv;const dose=$('inpDose').value.trim(),pills=parseInt($('selPills').value)||1,freq=parseInt($('selFreq').value)||1,timing=$('selTiming').value,method=$('selMethod').value,warning=$('selWarning').value;if(!dn||!dose){showToast('أكمل بيانات الدواء','error');return;}if(currentMeds.some(x=>x.drugName.toLowerCase()===dn.toLowerCase())){showToast('هذا الدواء مضاف مسبقاً','error');return;}currentMeds.push({id:generateId(),category:c,drugName:dn,dose,pills,freq,timing,method,warning,instruction:generateArabicInstruction(pills,method,freq),warningText:warning?WARNING_ARABIC[warning]:''});renderMedsList();showToast('تمت إضافة الدواء');resetMedInputs();}
         function removeMed(i){currentMeds.splice(i,1);renderMedsList();}
         window._removeMed=removeMed;
 
@@ -327,7 +384,7 @@
 
         function enterEditMode(id){const p=patients.find(x=>x.id===id);if(!p)return;editingPatientId=id;$('inpName').value=p.name;$('inpRoom').value=p.room;$('inpBed').value=p.bed;currentMeds=[...p.meds];renderMedsList();$('btnSaveText').textContent='تحديث بيانات المريض';$('btnSave').classList.remove('btn-gold');$('btnSave').classList.add('btn-update');$('btnCancelEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});}
         window._editPatient=enterEditMode;
-        function exitEditMode(){editingPatientId=null;$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();$('btnSaveText').textContent='حفظ المريض في الطابور';$('btnSave').classList.add('btn-gold');$('btnSave').classList.remove('btn-update');$('btnCancelEdit').classList.add('hidden');}
+        function exitEditMode(){editingPatientId=null;$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';resetMedInputs();currentMeds=[];renderMedsList();$('btnSaveText').textContent='حفظ المريض في الطابور';$('btnSave').classList.add('btn-gold');$('btnSave').classList.remove('btn-update');$('btnCancelEdit').classList.add('hidden');}
         $('btnCancelEdit').addEventListener('click',exitEditMode);
 
         async function saveOrUpdatePatient(){
@@ -336,7 +393,7 @@
             if(!currentMeds.length){showToast('أدخل دواء واحد على الأقل','error');return;}
             const data={name,room,bed,meds:[...currentMeds],wardId:currentUser?currentUser.wardId:'',saveDate:new Date().toISOString()};
             if(editingPatientId){showToast('جاري التحديث...','info');try{await updateDoc(doc(db,"counseling_patients",editingPatientId),data);exitEditMode();showToast('تم التحديث بنجاح');}catch(e){showToast('فشل التحديث','error');}}
-            else{showToast('جاري الحفظ...','info');try{await addDoc(patientsRef,data);$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';$('selCategory').value='';updateDrugDropdown();$('inpDose').value='';$('selTiming').value='';$('selWarning').value='';$('previewBox').classList.add('hidden');$('btnAddMed').disabled=true;currentMeds=[];renderMedsList();showToast('تم الحفظ بنجاح');}catch(e){showToast('فشل الحفظ','error');}}
+            else{showToast('جاري الحفظ...','info');try{await addDoc(patientsRef,data);$('inpName').value='';$('inpRoom').value='';$('inpBed').value='';resetMedInputs();currentMeds=[];renderMedsList();showToast('تم الحفظ بنجاح');}catch(e){showToast('فشل الحفظ','error');}}
         }
 
         let unsubscribeFn=null;

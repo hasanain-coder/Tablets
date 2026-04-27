@@ -1,7 +1,3 @@
-اريد تحل مشكلة اسم العلاج ميبين بالطباعة من طويل 
-تاكد من تصغير حجم الخط اذا جانت الكتابة متكفي بالخلية
-لا تلغي او تعدل او تنظف اي شي ثاني
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -409,7 +405,15 @@
             <div class="pdf-info-row"><div class="pdf-info-item"><span class="pdf-info-value">${displayName}</span></div><div class="pdf-info-item"><span class="pdf-info-label">الغرفة:</span><span class="pdf-info-value">${patient.room}</span></div><div class="pdf-info-item"><span class="pdf-info-label">السرير:</span><span class="pdf-info-value">${patient.bed}</span></div><div class="pdf-info-item"><span class="pdf-info-value">${printDate}</span></div></div>
             <div class="pdf-table-wrap"><div class="pdf-thead"><div class="pdf-th"></div><div class="pdf-th">اسم الدواء</div><div class="pdf-th">الجرعة</div><div class="pdf-th">التعليمات</div></div><div class="pdf-tbody">`;
             for(const m of pageMeds){
-                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;
+                let dnLen = (m.drugName || '').length;
+                let dnSize = '13.5pt';
+                if(dnLen > 30) dnSize = '6.5pt';
+                else if(dnLen > 24) dnSize = '7.5pt';
+                else if(dnLen > 18) dnSize = '9pt';
+                else if(dnLen > 14) dnSize = '10.5pt';
+                else if(dnLen > 11) dnSize = '12pt';
+                
+                h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell cell-name" style="font-size:${dnSize}; white-space:nowrap; overflow:hidden; text-overflow:clip;">${m.drugName}</div><div class="pdf-cell cell-dose">${m.dose} X ${m.freq}</div><div class="pdf-cell cell-instr"><div><div class="instr-main">${m.instruction}</div>${m.timing?`<div class="instr-timing">${m.timing}</div>`:''}${m.warningText?`<div class="instr-warning">${m.warningText}</div>`:''}</div></div></div>`;
             }
             for(let i=0;i<emptyCount;i++){h+=`<div class="pdf-row"><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div><div class="pdf-cell"></div></div>`;}
             h+=`</div></div>`;
